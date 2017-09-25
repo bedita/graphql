@@ -48,6 +48,7 @@ class QueryActionTest extends TestCase
      * @return void
      *
      * @covers ::execute()
+     * @covers ::buildSchema()
      */
     public function testExecute()
     {

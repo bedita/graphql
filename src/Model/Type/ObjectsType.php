@@ -17,17 +17,25 @@ use BEdita\GraphQL\Model\FieldsRegistry;
 use GraphQL\Type\Definition\ObjectType as GraphQLObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
+/**
+ * BEdita objects GraphQL representation.
+ *
+ * @since 4.0.0
+ */
 class ObjectsType extends GraphQLObjectType
 {
+    /**
+     * {@inheritDoc}
+     */
     public function __construct($options)
     {
         $config = [
             'name' => $options['name'],
             'description' => $options['name'] . ' type',
-            'fields' => function() use ($options) {
+            'fields' => function () use ($options) {
                 return FieldsRegistry::objectFields($options['name']);
             },
-            'resolveField' => function($value, $args, $context, ResolveInfo $info) {
+            'resolveField' => function ($value, $args, $context, ResolveInfo $info) {
                 return $value->{$info->fieldName};
             }
         ];

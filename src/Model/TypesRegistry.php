@@ -13,9 +13,9 @@
 
 namespace BEdita\GraphQL\Model;
 
+use BEdita\GraphQL\Model\Type\ObjectsType;
 use BEdita\GraphQL\Model\Type\QueryType;
 use BEdita\GraphQL\Model\Type\ResourcesType;
-use BEdita\GraphQL\Model\Type\ObjectsType;
 use Cake\ORM\TableRegistry;
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
@@ -84,6 +84,8 @@ class TypesRegistry
      * Registered resource type names
      *
      * @return array
+     *
+     * @codeCoverageIgnore
      */
     public static function resourceTypeNames()
     {
@@ -105,6 +107,9 @@ class TypesRegistry
     }
 
     /**
+     * Get graphql representation of an object from its type $name
+     *
+     * @param string $name Object type name
      * @return \BEdita\GraphQL\Model\Type\ObjectsType
      */
     public static function objectType($name)
@@ -118,6 +123,9 @@ class TypesRegistry
     }
 
     /**
+     * Get graphql representation of a resource from its type $name
+     *
+     * @param string $name Object type name
      * @return \BEdita\GraphQL\Model\Type\ResourcesType
      */
     public static function resourceType($name)
@@ -133,6 +141,7 @@ class TypesRegistry
     /**
      * See if $name is a registered object type
      *
+     * @param string $name Type name
      * @return bool True if item `name` is an `object` type
      */
     public static function isAnObject($name)
@@ -142,13 +151,17 @@ class TypesRegistry
 
     /**
      * @return \BEdita\GraphQL\Model\Type\QueryType
+     * @codeCoverageIgnore
      */
     public static function query()
     {
         return self::$query ?: (self::$query = new QueryType());
     }
 
-    // Let's add internal types as well for consistent experience
+    /**
+     * @return \GraphQL\Type\Definition\BooleanType
+     * @codeCoverageIgnore
+     */
     public static function boolean()
     {
         return Type::boolean();
@@ -156,6 +169,7 @@ class TypesRegistry
 
     /**
      * @return \GraphQL\Type\Definition\FloatType
+     * @codeCoverageIgnore
      */
     public static function float()
     {
@@ -164,6 +178,7 @@ class TypesRegistry
 
     /**
      * @return \GraphQL\Type\Definition\IDType
+     * @codeCoverageIgnore
      */
     public static function id()
     {
@@ -172,6 +187,7 @@ class TypesRegistry
 
     /**
      * @return \GraphQL\Type\Definition\IntType
+     * @codeCoverageIgnore
      */
     public static function int()
     {
@@ -180,6 +196,7 @@ class TypesRegistry
 
     /**
      * @return \GraphQL\Type\Definition\StringType
+     * @codeCoverageIgnore
      */
     public static function string()
     {
@@ -187,8 +204,9 @@ class TypesRegistry
     }
 
     /**
-     * @param Type $type
+     * @param Type $type Type name
      * @return ListOfType
+     * @codeCoverageIgnore
      */
     public static function listOf($type)
     {
@@ -196,8 +214,9 @@ class TypesRegistry
     }
 
     /**
-     * @param Type $type
+     * @param Type $type Type name
      * @return NonNull
+     * @codeCoverageIgnore
      */
     public static function nonNull($type)
     {

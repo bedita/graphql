@@ -49,7 +49,7 @@ class FieldsRegistry
         if (empty(self::$objectFields[$name])) {
             $fields = [];
             $properties = static::objectProperties($name);
-            foreach($properties as $prop) {
+            foreach ($properties as $prop) {
                 $fields[$prop] = TypesRegistry::string();
             }
             self::$objectFields[$name] = $fields;
@@ -68,7 +68,7 @@ class FieldsRegistry
     {
         $fields = [];
         $properties = static::resourceProperties($name);
-        foreach($properties as $prop) {
+        foreach ($properties as $prop) {
             $fields[$prop] = TypesRegistry::string();
         }
 
@@ -84,9 +84,9 @@ class FieldsRegistry
     public static function objectProperties($name)
     {
         $objectType = TableRegistry::get('ObjectTypes')->get($name);
-        $table =  TableRegistry::get($objectType->alias);
-
+        $table = TableRegistry::get($objectType->alias);
         $entity = $table->newEntity();
+
         return array_diff($table->getSchema()->columns(), $entity->hiddenProperties());
     }
 
@@ -99,8 +99,8 @@ class FieldsRegistry
     public static function resourceProperties($name)
     {
         $table = TableRegistry::get(Inflector::camelize($name));
-
         $entity = $table->newEntity();
+
         return array_diff($table->getSchema()->columns(), $entity->hiddenProperties());
     }
 }

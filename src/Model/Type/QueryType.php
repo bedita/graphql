@@ -23,16 +23,24 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
+/**
+ * GraphQL root BEdita query.
+ *
+ * @since 4.0.0
+ */
 class QueryType extends ObjectType
 {
+    /**
+     * {@inheritDoc}
+     */
     public function __construct()
     {
         $config = [
             'name' => 'Query',
-            'fields' => function() {
+            'fields' => function () {
                 return TypesRegistry::rootTypes();
             },
-            'resolveField' => function($val, $args, $context, ResolveInfo $info) {
+            'resolveField' => function ($val, $args, $context, ResolveInfo $info) {
                 return $this->resolve($val, $args, $context, $info);
             }
         ];
@@ -42,25 +50,23 @@ class QueryType extends ObjectType
     /**
      * Resolve a root type item in our resources/objects graph
      *
-     * @param mixed $rootValue, Rootvalue - currently unused
-     * @param mixed $args, Arguments to resolve an item - currently only 'id' supported
-     * @param AppContext $context
-     * @param ResolveInfo $info
-     * @return void
+     * @param mixed $rootValue Root value - currently unused
+     * @param mixed $args Arguments to resolve an item - currently only 'id' supported
+     * @param AppContext $context Application context
+     * @param ResolveInfo $info Resolve information
+     *
+     * @return mixed
      */
     public function resolve($rootValue, $args, AppContext $context, ResolveInfo $info)
     {
         if (TypesRegistry::isAnObject($info->fieldName)) {
 
             $objectType = TableRegistry::get('ObjectTypes')->get($info->fieldName);
-            $table =  TableRegistry::get($objectType->alias);
+            $table = TableRegistry::get($objectType->alias);
             $action = new GetObjectAction(compact('table', 'objectType'));
-
         } else {
-
             $table = TableRegistry::get(Inflector::camelize($info->fieldName));
             $action = new GetEntityAction(compact('table'));
-
         }
 
         $data = $action(['primaryKey' => $args['id']]);

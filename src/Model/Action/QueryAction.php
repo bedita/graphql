@@ -15,12 +15,12 @@ namespace BEdita\GraphQL\Model\Action;
 
 use BEdita\Core\Model\Action\BaseAction;
 use BEdita\GraphQL\Model\AppContext;
-use BEdita\GraphQL\Model\Type\QueryType;
 use BEdita\GraphQL\Model\TypesRegistry;
+use BEdita\GraphQL\Model\Type\QueryType;
 use GraphQL\GraphQL;
-use GraphQL\Type\Schema;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+use GraphQL\Type\Schema;
 
 /**
  * Executes GraphQL query.
@@ -57,7 +57,6 @@ class QueryAction extends BaseAction
             );
 
             $result = $result->toArray();
-
         } catch (\Exception $e) {
             $result = [
                 'errors' => [
@@ -65,9 +64,9 @@ class QueryAction extends BaseAction
                 ],
                 'status' => 500,
             ];
-         }
+        }
 
-         return $result;
+        return $result;
     }
 
     /**
