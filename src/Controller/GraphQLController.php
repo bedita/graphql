@@ -17,6 +17,7 @@ use BEdita\GraphQL\Model\Action\QueryAction;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Log\Log;
+use Cake\Utility\Hash;
 
 /**
  * GraphQL controller endpoint
@@ -28,8 +29,6 @@ class GraphQLController extends BaseController
 
     /**
      * {@inheritDoc}
-     *
-     * @codeCoverageIgnore
      */
     public function initialize()
     {
@@ -98,6 +97,10 @@ class GraphQLController extends BaseController
 
         $key = !empty($result['data']) ? 'data' : 'errors';
 
+        if ($key === 'errors') {
+            $status = Hash::get($result, 'status', 400);
+            $this->response = $this->response->withStatus($status);
+        }
         $this->set([$key => $result[$key]]);
         $this->set('_serialize', [$key]);
     }

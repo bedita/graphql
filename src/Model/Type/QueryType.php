@@ -16,8 +16,9 @@ namespace BEdita\GraphQL\Model\Type;
 use BEdita\Core\Model\Action\GetEntityAction;
 use BEdita\Core\Model\Action\GetObjectAction;
 use BEdita\GraphQL\Model\AppContext;
-use BEdita\GraphQL\Model\Types;
+use BEdita\GraphQL\Model\TypesRegistry;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Inflector;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
@@ -28,40 +29,40 @@ class QueryType extends ObjectType
     {
         $config = [
             'name' => 'Query',
-            'fields' => [
-                'users' => [
-                    'type' => Types::users(),
-                    'description' => 'Returns user by id',
-                    'args' => [
-                        'id' => Types::nonNull(Types::id())
-                    ]
-                ],
-                'roles' => [
-                    'type' => Types::roles(),
-                    'description' => 'Returns role by id',
-                    'args' => [
-                        'id' => Types::nonNull(Types::id())
-                    ]
-                ],
-            ],
+            'fields' => function() {
+                return TypesRegistry::rootTypes();
+            },
             'resolveField' => function($val, $args, $context, ResolveInfo $info) {
-                return $this->{$info->fieldName}($val, $args, $context, $info);
+                return $this->resolve($val, $args, $context, $info);
             }
         ];
         parent::__construct($config);
     }
 
-    public function users($rootValue, $args, AppContext $context)
+    /**
+     * Resolve a root type item in our resources/objects graph
+     *
+     * @param mixed $rootValue, Rootvalue - currently unused
+     * @param mixed $args, Arguments to resolve an item - currently only 'id' supported
+     * @param AppContext $context
+     * @param ResolveInfo $info
+     * @return void
+     */
+    public function resolve($rootValue, $args, AppContext $context, ResolveInfo $info)
     {
-        $action = new GetObjectAction(['table' => TableRegistry::get('Users')]);
-        $data = $action(['primaryKey' => $args['id']]);
+        if (TypesRegistry::isAnObject($info->fieldName)) {
 
-        return $data;
-    }
+            $objectType = TableRegistry::get('ObjectTypes')->get($info->fieldName);
+            $table =  TableRegistry::get($objectType->alias);
+            $action = new GetObjectAction(compact('table', 'objectType'));
 
-    public function roles($rootValue, $args, AppContext $context)
-    {
-        $action = new GetEntityAction(['table' => TableRegistry::get('Roles')]);
+        } else {
+
+            $table = TableRegistry::get(Inflector::camelize($info->fieldName));
+            $action = new GetEntityAction(compact('table'));
+
+        }
+
         $data = $action(['primaryKey' => $args['id']]);
 
         return $data;

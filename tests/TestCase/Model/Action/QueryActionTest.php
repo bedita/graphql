@@ -35,6 +35,8 @@ class QueryActionTest extends TestCase
         'plugin.BEdita/Core.relations',
         'plugin.BEdita/Core.relation_types',
         'plugin.BEdita/Core.objects',
+        'plugin.BEdita/Core.locations',
+        'plugin.BEdita/Core.media',
         'plugin.BEdita/Core.profiles',
         'plugin.BEdita/Core.roles',
         'plugin.BEdita/Core.users',
@@ -44,6 +46,8 @@ class QueryActionTest extends TestCase
      * Test simple query execution.
      *
      * @return void
+     *
+     * @covers ::execute()
      */
     public function testExecute()
     {

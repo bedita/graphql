@@ -15,9 +15,10 @@ namespace BEdita\GraphQL\Model\Action;
 
 use BEdita\Core\Model\Action\BaseAction;
 use BEdita\GraphQL\Model\AppContext;
-use BEdita\GraphQL\Model\Types;
+use BEdita\GraphQL\Model\Type\QueryType;
+use BEdita\GraphQL\Model\TypesRegistry;
 use GraphQL\GraphQL;
-use GraphQL\Schema;
+use GraphQL\Type\Schema;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
@@ -28,6 +29,14 @@ use GraphQL\Type\Definition\Type;
  */
 class QueryAction extends BaseAction
 {
+
+    /**
+     * GraphQL schema of current project
+     *
+     * @var \GraphQL\Schema
+     */
+    protected $schema;
+
     /**
      * {@inheritDoc}
      */
@@ -35,30 +44,41 @@ class QueryAction extends BaseAction
     {
         $data = array_merge(['query' => null, 'variables' => null, 'operationName' => null], $data);
 
-        $schema = new Schema([
-            'query' => Types::query()
-        ]);
-
-        $appContext = new AppContext();
-
         try {
-            $result = GraphQL::execute(
-                $schema,
+            $this->buildSchema();
+
+            $result = GraphQL::executeQuery(
+                $this->schema,
                 $data['query'],
                 null,
-                $appContext,
+                new AppContext(),
                 $data['variables'],
                 $data['operationName']
             );
+
+            $result = $result->toArray();
 
         } catch (\Exception $e) {
             $result = [
                 'errors' => [
                     'message' => $e->getMessage()
-                ]
+                ],
+                'status' => 500,
             ];
-        }
+         }
 
-        return $result;
+         return $result;
+    }
+
+    /**
+     * Build GraphQL project schema
+     *
+     * @return void
+     */
+    protected function buildSchema()
+    {
+        $this->schema = new Schema([
+            'query' => TypesRegistry::query()
+        ]);
     }
 }
