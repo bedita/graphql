@@ -25,18 +25,30 @@ use Cake\Utility\Inflector;
 class FieldsRegistry
 {
     /**
-     * Registry of resource fields
+     * Resource fields internal registry
      *
      * @var array
      */
     private static $resourceFields = [];
 
     /**
-     * Registry of object fields
+     * Object fields internal registry
      *
      * @var array
      */
     private static $objectFields = [];
+
+
+    /**
+     * Clear internal registry
+     *
+     * @return void
+     */
+    public static function clear()
+    {
+        self::$resourceFields =[];
+        self::$objectFields =[];
+    }
 
     /**
      * Retrieve a list of fields for a given object type $name

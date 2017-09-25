@@ -28,8 +28,25 @@ use GraphQL\Type\Definition\Type;
  */
 class TypesRegistry
 {
+    /**
+     * Resource types internal registry
+     *
+     * @var array
+     */
     private static $resourceTypes = [];
+
+    /**
+     * Object types internal registry
+     *
+     * @var array
+     */
     private static $objectTypes = [];
+
+    /**
+     * Query type
+     *
+     * @var \BEdita\GraphQL\Model\Type\QueryType
+     */
     private static $query;
 
     /**
@@ -45,6 +62,18 @@ class TypesRegistry
      * @var array
      */
     private static $objectTypeNames = [];
+
+    /**
+     * Clear internal dynamic registry
+     *
+     * @return void
+     */
+    public static function clear()
+    {
+        self::$resourceTypes =[];
+        self::$objectTypes =[];
+        self::$objectTypeNames = [];
+    }
 
     /**
      * Return all resource and object types
@@ -139,7 +168,7 @@ class TypesRegistry
     }
 
     /**
-     * See if $name is a registered object type
+     * See if $name is a registered BEdita object type
      *
      * @param string $name Type name
      * @return bool True if item `name` is an `object` type
