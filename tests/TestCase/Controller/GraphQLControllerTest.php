@@ -27,7 +27,6 @@ class GraphQLControllerTest extends IntegrationTestCase
         'plugin.BEdita/Core.media',
     ];
 
-
     /**
      * Data provider for `testContentType`
      *
@@ -67,8 +66,9 @@ class GraphQLControllerTest extends IntegrationTestCase
      *
      * @return void
      *
-     * @covers ::index()
+     * @covers ::execute()
      * @covers ::initialize()
+     * @covers ::readInput()
      * @dataProvider contentTypeProvider()
      */
     public function testContentType($contentType, $method, $body, $queryString = '')
@@ -120,8 +120,9 @@ class GraphQLControllerTest extends IntegrationTestCase
      *
      * @return void
      *
-     * @covers ::index()
+     * @covers ::execute()
      * @covers ::initialize()
+     * @covers ::readInput()
      * @dataProvider failureProvider()
      */
     public function testFailure($query, $status, $message = '')
