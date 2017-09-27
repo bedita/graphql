@@ -159,7 +159,7 @@ class TypesRegistry
      */
     public static function resourceType($name)
     {
-        if (empty(self::$resourceType[$name])) {
+        if (empty(self::$resourceTypes[$name])) {
             $resType = new ResourcesType(compact('name'));
             self::$resourceTypes[$name] = $resType;
         }
