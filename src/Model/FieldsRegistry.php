@@ -38,7 +38,6 @@ class FieldsRegistry
      */
     private static $objectFields = [];
 
-
     /**
      * Clear internal registry
      *
@@ -46,8 +45,8 @@ class FieldsRegistry
      */
     public static function clear()
     {
-        self::$resourceFields =[];
-        self::$objectFields =[];
+        self::$resourceFields = [];
+        self::$objectFields = [];
     }
 
     /**

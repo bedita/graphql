@@ -42,11 +42,11 @@ class FieldsRegistryTest extends TestCase
         'plugin.BEdita/Core.users',
     ];
 
-   /**
-    * Data provider for `testObjectFields`
-    *
-    * @return void
-    */
+    /**
+     * Data provider for `testObjectFields`
+     *
+     * @return void
+     */
     public function objectsProvider()
     {
         return [
@@ -83,11 +83,11 @@ class FieldsRegistryTest extends TestCase
         }
     }
 
-   /**
-    * Data provider for `testResourceFields`
-    *
-    * @return void
-    */
+    /**
+     * Data provider for `testResourceFields`
+     *
+     * @return void
+     */
     public function resourcesProvider()
     {
         return [
@@ -100,7 +100,7 @@ class FieldsRegistryTest extends TestCase
                  ['api_key', 'name', 'description'],
              ],
          ];
-     }
+    }
 
     /**
      * Test `resourceFields` method

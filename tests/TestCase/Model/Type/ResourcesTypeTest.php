@@ -24,24 +24,24 @@ use Cake\TestSuite\TestCase;
 class ResourcesTypeTest extends TestCase
 {
 
-   /**
-    * Fixtures
-    *
-    * @var array
-    */
-   public $fixtures = [
-       'plugin.BEdita/Core.roles',
-       'plugin.BEdita/Core.applications',
-   ];
+    /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'plugin.BEdita/Core.roles',
+        'plugin.BEdita/Core.applications',
+    ];
 
-   /**
-    * Data provider for `testCreate`
-    *
-    * @return void
-    */
-   public function typeProvider()
-   {
-       return [
+    /**
+     * Data provider for `testCreate`
+     *
+     * @return void
+     */
+    public function typeProvider()
+    {
+        return [
            'roles' => [
                'roles',
                ['name', 'description', 'unchangeable'],
@@ -51,25 +51,25 @@ class ResourcesTypeTest extends TestCase
                 ['api_key', 'name', 'description'],
             ],
         ];
-   }
+    }
 
-   /**
-    * Test simple resource type creation
-    *
-    * @return void
-    *
-    * @covers ::__construct()
-    * @dataProvider typeProvider
-    */
-   public function testCreate($name, $expected)
-   {
-       $resourceType = new ResourcesType(compact('name'));
+    /**
+     * Test simple resource type creation
+     *
+     * @return void
+     *
+     * @covers ::__construct()
+     * @dataProvider typeProvider
+     */
+    public function testCreate($name, $expected)
+    {
+        $resourceType = new ResourcesType(compact('name'));
 
-       $fields = $resourceType->getFields();
+        $fields = $resourceType->getFields();
 
-       static::assertNotEmpty($fields);
-       foreach ($expected as $key) {
-           static::assertArrayHasKey($key, $fields);
-       }
-   }
+        static::assertNotEmpty($fields);
+        foreach ($expected as $key) {
+            static::assertArrayHasKey($key, $fields);
+        }
+    }
 }

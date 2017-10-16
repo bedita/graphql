@@ -46,11 +46,11 @@ class QueryTypeTest extends TestCase
         'plugin.BEdita/Core.users',
     ];
 
-   /**
-    * Data provider for `testResolve`
-    *
-    * @return void
-    */
+    /**
+     * Data provider for `testResolve`
+     *
+     * @return void
+     */
     public function resolveProvider()
     {
         return [

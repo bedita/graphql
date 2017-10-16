@@ -60,7 +60,6 @@ class QueryType extends ObjectType
     public function resolve($rootValue, $args, AppContext $context, ResolveInfo $info)
     {
         if (TypesRegistry::isAnObject($info->fieldName)) {
-
             $objectType = TableRegistry::get('ObjectTypes')->get($info->fieldName);
             $table = TableRegistry::get($objectType->alias);
             $action = new GetObjectAction(compact('table', 'objectType'));

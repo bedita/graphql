@@ -70,8 +70,8 @@ class TypesRegistry
      */
     public static function clear()
     {
-        self::$resourceTypes =[];
-        self::$objectTypes =[];
+        self::$resourceTypes = [];
+        self::$objectTypes = [];
         self::$objectTypeNames = [];
     }
 

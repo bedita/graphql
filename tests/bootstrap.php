@@ -1,8 +1,18 @@
 <?php
+/**
+ * BEdita, API-first content management framework
+ * Copyright 2017 ChannelWeb Srl, Chialab Srl
+ *
+ * This file is part of BEdita: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * See LICENSE.LGPL or <http://gnu.org/licenses/lgpl-3.0.html> for more details.
+ */
 
-
-use BEdita\Core\Plugin;
 use BEdita\Core\Filesystem\FilesystemRegistry;
+use BEdita\Core\Plugin;
 use Cake\Cache\Cache;
 use Cake\Console\ConsoleErrorHandler;
 use Cake\Core\Configure;
@@ -82,7 +92,6 @@ Configure::write('Filesystem', [
         'baseUrl' => 'https://static.example.org/files',
     ],
 ]);
-
 
 /* When debug = true the metadata cache should last
  * for a very very short time, as we want
@@ -182,16 +191,16 @@ Cache::setConfig('_bedita_object_types_', ['className' => 'Null']);
 Configure::write('debug', true);
 
 Plugin::load(
-    'BEdita/Core', 
-    ['bootstrap' => true, 'path' =>  $basePluginsPath . 'core' . DS]
+    'BEdita/Core',
+    ['bootstrap' => true, 'path' => $basePluginsPath . 'core' . DS]
 );
 
 Plugin::load(
     'BEdita/API',
-    ['bootstrap' => true, 'routes' => true, 'path' =>  $basePluginsPath . 'api' . DS]
+    ['bootstrap' => true, 'routes' => true, 'path' => $basePluginsPath . 'api' . DS]
 );
 
 Plugin::load(
     'BEdita/GraphQL',
-    ['routes' => true, 'path' =>  ROOT]
+    ['routes' => true, 'path' => ROOT]
 );
