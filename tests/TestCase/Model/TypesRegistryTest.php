@@ -61,7 +61,6 @@ class TypesRegistryTest extends TestCase
         $result = TypesRegistry::rootTypes();
 
         $expected = [
-            'roles',
             'applications',
             'documents',
             'events',
@@ -69,9 +68,11 @@ class TypesRegistryTest extends TestCase
             'media',
             'news',
             'profiles',
+            'roles',
             'users',
         ];
 
+        ksort($result);
         static::assertNotEmpty($result);
         static::assertEquals(array_keys($result), $expected);
         foreach ($expected as $k) {
