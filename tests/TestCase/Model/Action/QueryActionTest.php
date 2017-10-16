@@ -31,6 +31,7 @@ class QueryActionTest extends TestCase
      */
     public $fixtures = [
         'plugin.BEdita/Core.object_types',
+        'plugin.BEdita/Core.property_types',
         'plugin.BEdita/Core.properties',
         'plugin.BEdita/Core.relations',
         'plugin.BEdita/Core.relation_types',
