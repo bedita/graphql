@@ -19,3 +19,8 @@
 Icon?
 ehthumbs.db
 Thumbs.db
+
+# Plugin files #
+################
+/composer.lock
+/vendor/*
