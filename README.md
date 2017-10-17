@@ -1,5 +1,8 @@
 # GraphQL plugin for BEdita4
 
+[![Build Status](https://travis-ci.org/bedita/graphql.svg)](https://travis-ci.org/bedita/graphql)
+[![Code Coverage](https://codecov.io/gh/bedita/graphql/branch/master/graph/badge.svg)](https://codecov.io/gh/bedita/graphql)
+
 A [GraphQL](http://graphql.org) plugin for BEdita4. Only ``Queries`` are supported for now, no ``Mutations``, with limited support.
 
 ## Installation
