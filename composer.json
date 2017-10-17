@@ -25,6 +25,9 @@
     "autoload-dev": {
         "psr-4": {
             "BEdita\\GraphQL\\Test\\": "tests",
+            "BEdita\\App\\": "tests/test_app/src",
+            "BEdita\\Core\\Test\\": "./vendor/bedita/core/tests",
+            "BEdita\\API\\Test\\": "./vendor/bedita/api/tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     }

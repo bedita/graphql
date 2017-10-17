@@ -45,12 +45,6 @@ define('LOGS', TMP);
 $loader = new \Cake\Core\ClassLoader;
 $loader->register();
 
-$loader->addNamespace('BEdita\App', APP . 'src');
-
-$basePluginsPath = ROOT . 'vendor' . DS . 'bedita' . DS;
-$loader->addNamespace('BEdita\Core\Test', $basePluginsPath . DS . 'core' . DS . 'tests');
-$loader->addNamespace('BEdita\API\Test', $basePluginsPath . DS . 'api' . DS . 'tests');
-
 require_once CORE_PATH . 'config/bootstrap.php';
 
 date_default_timezone_set('UTC');
@@ -189,6 +183,8 @@ Type::build('datetime')
 Cache::drop('_bedita_object_types_');
 Cache::setConfig('_bedita_object_types_', ['className' => 'Null']);
 Configure::write('debug', true);
+
+$basePluginsPath = ROOT . 'vendor' . DS . 'bedita' . DS;
 
 Plugin::load(
     'BEdita/Core',
