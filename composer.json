@@ -9,8 +9,8 @@
         "issues": "https://github.com/bedita/graphql/issues"
     },
     "require": {
-        "bedita/core": "~4.0.0-alpha",
-        "bedita/api": "~4.0.0-alpha",
+        "bedita/core": "dev-4-cactus",
+        "bedita/api": "dev-4-cactus",
         "webonyx/graphql-php": "~0.10"
     },
     "require-dev": {
