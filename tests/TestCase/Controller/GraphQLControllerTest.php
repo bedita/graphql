@@ -38,7 +38,7 @@ class GraphQLControllerTest extends IntegrationTestCase
             'application json' => [
                  'application/json',
                  'POST',
-                 '{"query": "query { users(id: \"1\") { username }}"}',
+                 '{"query": "query { user(id: \"1\") { username }}"}',
             ],
             // TODO: works from -  curl -H Content-Type:application/graphql http://be4.dev/graphql -d "query{users(id:\"1\"){username}}"
             // but not on on unit tests, why??
@@ -50,13 +50,13 @@ class GraphQLControllerTest extends IntegrationTestCase
             'no type' => [
                 '',
                 'POST',
-                '{"query": "{ users(id: \"1\") { username }}"}'
+                '{"query": "{ user(id: \"1\") { username }}"}'
             ],
             'simple get' => [
                 '',
                 'GET',
                 '',
-                'query={users(id:"1"){username}}'
+                'query={user(id:"1"){username}}'
             ],
         ];
     }
@@ -75,7 +75,7 @@ class GraphQLControllerTest extends IntegrationTestCase
     {
         $expected = [
             'data' => [
-                'users' => [
+                'user' => [
                     'username' => 'first user',
                 ]
             ]

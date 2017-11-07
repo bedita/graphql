@@ -61,14 +61,27 @@ class TypesRegistryTest extends TestCase
         $result = TypesRegistry::rootTypes();
 
         $expected = [
+            'application',
             'applications',
+            'document',
             'documents',
+            'event',
             'events',
+            'file',
+            'files',
+            'location',
             'locations',
             'media',
+            'media_item',
             'news',
+            'news_item',
+            'object',
+            'objects',
+            'profile',
             'profiles',
+            'role',
             'roles',
+            'user',
             'users',
         ];
 
@@ -83,18 +96,49 @@ class TypesRegistryTest extends TestCase
     }
 
     /**
-     * Test `isAnObject` method
+     * Data provider for `testInspectTypeName`
      *
+     * @return array
+     */
+    public function inspectProvider()
+    {
+        return [
+            'user' => [
+                'user',
+                TypesRegistry::SINGLE_OBJECT,
+            ],
+            'users' => [
+                'users',
+                TypesRegistry::OBJECTS_LIST,
+            ],
+            'role' => [
+                'role',
+                TypesRegistry::SINGLE_RESOURCE,
+            ],
+            'roles' => [
+                'roles',
+                TypesRegistry::RESOURCES_LIST,
+            ],
+            'guatavo' => [
+                'gustavo',
+                false,
+            ],
+         ];
+    }
+
+    /**
+     * Test `inspectTypeName` method
+     *
+     * @param string $name Type name
+     * @param mixed $expected Inspection result
      * @return void
      *
-     * @covers ::isAnObject()
+     * @dataProvider inspectProvider
+     * @covers ::inspectTypeName()
      */
-    public function testIsAnObject()
+    public function testInspectTypeName($name, $expected)
     {
-        $result = TypesRegistry::isAnObject('documents');
-        static::assertTrue($result);
-
-        $result = TypesRegistry::isAnObject('roles');
-        static::assertFalse($result);
+        $result = TypesRegistry::inspectTypeName($name);
+        static::assertEquals($result, $expected);
     }
 }
