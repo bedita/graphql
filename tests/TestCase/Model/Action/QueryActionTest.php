@@ -50,16 +50,19 @@ class QueryActionTest extends TestCase
      *
      * @covers ::execute()
      * @covers ::buildSchema()
+     * @covers \BEdita\GraphQL\Model\Type\ObjectsType::__construct()
+     * @covers \BEdita\GraphQL\Model\Type\QueryType::__construct()
+     * @covers \BEdita\GraphQL\Model\Type\ResourcesType::__construct()
      */
     public function testExecute()
     {
-        $query = '{users(id: "1") { username }}';
+        $query = '{user(id: "1") { username }}';
         $action = new QueryAction();
         $result = $action(compact('query'));
 
         $expected = [
             'data' => [
-                'users' => [
+                'user' => [
                     'username' => 'first user',
                 ]
             ]
@@ -69,13 +72,13 @@ class QueryActionTest extends TestCase
         static::assertArrayNotHasKey('errors', $result);
         static::assertEquals($expected, $result);
 
-        $query = '{roles(id: "1") { name }}';
+        $query = '{role(id: "1") { name }}';
         $action = new QueryAction();
         $result = $action(compact('query'));
 
         $expected = [
             'data' => [
-                'roles' => [
+                'role' => [
                     'name' => 'first role',
                 ]
             ]

@@ -15,8 +15,11 @@ namespace BEdita\GraphQL\Model\Type;
 
 use BEdita\Core\Model\Action\GetEntityAction;
 use BEdita\Core\Model\Action\GetObjectAction;
+use BEdita\Core\Model\Action\ListEntitiesAction;
+use BEdita\Core\Model\Action\ListObjectsAction;
 use BEdita\GraphQL\Model\AppContext;
 use BEdita\GraphQL\Model\TypesRegistry;
+use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 use GraphQL\Type\Definition\ObjectType;
@@ -59,17 +62,92 @@ class QueryType extends ObjectType
      */
     public function resolve($rootValue, $args, AppContext $context, ResolveInfo $info)
     {
-        if (TypesRegistry::isAnObject($info->fieldName)) {
-            $objectType = TableRegistry::get('ObjectTypes')->get($info->fieldName);
-            $table = TableRegistry::get($objectType->alias);
-            $action = new GetObjectAction(compact('table', 'objectType'));
-        } else {
-            $table = TableRegistry::get(Inflector::camelize($info->fieldName));
-            $action = new GetEntityAction(compact('table'));
+        $type = TypesRegistry::inspectTypeName($info->fieldName);
+        if ($type === false) {
+            throw new BadRequestException(__d('bedita', 'Type name "{0}" not found', $info->fieldName));
         }
 
-        $data = $action(['primaryKey' => $args['id']]);
+        $resolvers = [
+            TypesRegistry::SINGLE_RESOURCE => 'resolveResource',
+            TypesRegistry::RESOURCES_LIST => 'resolveResourcesList',
+            TypesRegistry::SINGLE_OBJECT => 'resolveObject',
+            TypesRegistry::OBJECTS_LIST => 'resolveObjectsList',
+        ];
+        $method = $resolvers[$type];
 
-        return $data;
+        return $this->{$method}($rootValue, $args, $context, $info);
+    }
+
+    /**
+     * Resolve a single resource from its type name and id
+     *
+     * @param mixed $rootValue Root value
+     * @param mixed $args Arguments to resolve items
+     * @param AppContext $context Application context
+     * @param ResolveInfo $info Resolve information
+     * @return mixed
+     */
+    protected function resolveResource($rootValue, $args, AppContext $context, ResolveInfo $info)
+    {
+        $singularized = array_flip(TypesRegistry::resourceTypeNames());
+        $table = TableRegistry::get(Inflector::camelize($singularized[$info->fieldName]));
+        $action = new GetEntityAction(compact('table'));
+
+        return $action(['primaryKey' => $args['id']]);
+    }
+
+    /**
+     * Resolve a resources list from a filter input
+     *
+     * @param mixed $rootValue Root value
+     * @param mixed $args Arguments to resolve items
+     * @param AppContext $context Application context
+     * @param ResolveInfo $info Resolve information
+     * @return mixed
+     */
+    protected function resolveResourcesList($rootValue, $args, AppContext $context, ResolveInfo $info)
+    {
+        $table = TableRegistry::get(Inflector::camelize($info->fieldName));
+        $action = new ListEntitiesAction(compact('table'));
+        $filter = empty($args['filter']) ? [] : $args['filter'];
+
+        return $action(compact('filter'));
+    }
+
+    /**
+     * Resolve a single object from its type name and id
+     *
+     * @param mixed $rootValue Root value
+     * @param mixed $args Arguments to resolve items
+     * @param AppContext $context Application context
+     * @param ResolveInfo $info Resolve information
+     * @return mixed
+     */
+    protected function resolveObject($rootValue, $args, AppContext $context, ResolveInfo $info)
+    {
+        $objectType = TableRegistry::get('ObjectTypes')->get($info->fieldName);
+        $table = TableRegistry::get($objectType->alias);
+        $action = new GetObjectAction(compact('table', 'objectType'));
+
+        return $action(['primaryKey' => $args['id']]);
+    }
+
+    /**
+     * Resolve an objects list from a filter input
+     *
+     * @param mixed $rootValue Root value
+     * @param mixed $args Arguments to resolve items
+     * @param AppContext $context Application context
+     * @param ResolveInfo $info Resolve information
+     * @return mixed
+     */
+    protected function resolveObjectsList($rootValue, $args, AppContext $context, ResolveInfo $info)
+    {
+        $objectType = TableRegistry::get('ObjectTypes')->get($info->fieldName);
+        $table = TableRegistry::get($objectType->alias);
+        $action = new ListObjectsAction(compact('table', 'objectType'));
+        $filter = empty($args['filter']) ? [] : $args['filter'];
+
+        return $action(compact('filter'));
     }
 }

@@ -44,27 +44,18 @@ class QueryAction extends BaseAction
     {
         $data = array_merge(['query' => null, 'variables' => null, 'operationName' => null], $data);
 
-        try {
-            $this->buildSchema();
+        $this->buildSchema();
 
-            $result = GraphQL::executeQuery(
-                $this->schema,
-                $data['query'],
-                null,
-                new AppContext(),
-                $data['variables'],
-                $data['operationName']
-            );
+        $result = GraphQL::executeQuery(
+            $this->schema,
+            $data['query'],
+            null,
+            new AppContext(),
+            $data['variables'],
+            $data['operationName']
+        );
 
-            $result = $result->toArray();
-        } catch (\Exception $e) {
-            $result = [
-                'errors' => [
-                    'message' => $e->getMessage()
-                ],
-                'status' => 500,
-            ];
-        }
+        $result = $result->toArray();
 
         return $result;
     }

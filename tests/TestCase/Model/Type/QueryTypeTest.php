@@ -14,9 +14,8 @@
 namespace BEdita\GraphQL\Test\TestCase\Model\Type;
 
 use BEdita\GraphQL\Model\AppContext;
-
 use BEdita\GraphQL\Model\Type\QueryType;
-
+use Cake\Network\Exception\BadRequestException;
 use Cake\TestSuite\TestCase;
 use GraphQL\Type\Definition\ResolveInfo;
 
@@ -55,15 +54,33 @@ class QueryTypeTest extends TestCase
     public function resolveProvider()
     {
         return [
-            'users' => [
-                'users',
+            'user' => [
+                'user',
                 ['id' => 1],
                 ['username' => 'first user'],
             ],
-            'roles' => [
-                'roles',
+            'role' => [
+                'role',
                 ['id' => 1],
                 ['name' => 'first role'],
+            ],
+            'users' => [
+                'users',
+                null,
+                [
+                    0 => 'BEdita\Core\Model\Entity\User',
+                    1 => 'BEdita\Core\Model\Entity\User',
+                ],
+            ],
+            'roles' => [
+                'roles',
+                null,
+                [0 => 'BEdita\Core\Model\Entity\Role'],
+            ],
+            'gustavo' => [
+                'gustavo',
+                null,
+                new BadRequestException('Type name "gustavo" not found'),
             ],
          ];
     }
@@ -75,19 +92,33 @@ class QueryTypeTest extends TestCase
      *
      * @covers ::__construct()
      * @covers ::resolve()
+     * @covers ::resolveResource()
+     * @covers ::resolveResourcesList()
+     * @covers ::resolveObject()
+     * @covers ::resolveObjectsList()
      * @dataProvider resolveProvider
      */
     public function testResolve($type, $args, $expected)
     {
+        if ($expected instanceof \Exception) {
+            $this->expectException(get_class($expected));
+            $this->expectExceptionMessage($expected->getMessage());
+        }
+
         $queryType = new QueryType();
 
         $info = new ResolveInfo(['fieldName' => $type]);
         $result = $queryType->resolve(null, $args, new AppContext(), $info);
 
+        $result = $result->toArray();
         static::assertNotEmpty($result);
         foreach ($expected as $key => $value) {
             static::assertArrayHasKey($key, $result);
-            static::assertEquals($value, $result[$key]);
+            if (is_numeric($key)) {
+                static::assertEquals($value, get_class($result[$key]));
+            } else {
+                static::assertEquals($value, $result[$key]);
+            }
         }
     }
 }
