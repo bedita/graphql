@@ -16,7 +16,6 @@ namespace BEdita\GraphQL\Test\TestCase\Model\Action;
 use BEdita\GraphQL\Model\Action\QueryAction;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-//use GraphQL\Type\Schema;
 
 /**
  * {@see \BEdita\GraphQL\Model\Action\QueryAction} Test Case
