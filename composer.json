@@ -3,7 +3,7 @@
     "type": "cakephp-plugin",
     "description": "GraphQL plugin for BEdita",
     "keywords": ["graphql", "cakephp", "cake3", "plugin", "bedita"],
-    "license": "LGPL",
+    "license": "LGPL-3.0",
     "support": {
         "source": "https://github.com/bedita/graphql",
         "issues": "https://github.com/bedita/graphql/issues"
