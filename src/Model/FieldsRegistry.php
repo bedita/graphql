@@ -52,17 +52,17 @@ class FieldsRegistry
      */
     private static $filterFields = [];
 
-        /**
-         * Clear internal registry
-         *
-         * @return void
-         */
-        public static function clear()
-        {
-            self::$resourceFields = [];
-            self::$objectFields = [];
-            self::$filterFields = [];
-        }
+    /**
+     * Clear internal registry
+     *
+     * @return void
+     */
+    public static function clear()
+    {
+        self::$resourceFields = [];
+        self::$objectFields = [];
+        self::$filterFields = [];
+    }
 
     /**
      * Retrieve a list of fields for a given object type $name
