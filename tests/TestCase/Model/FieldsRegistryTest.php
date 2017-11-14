@@ -65,13 +65,15 @@ class FieldsRegistryTest extends TestCase
     /**
      * Test `objectFields` method
      *
+     * @param string $type Object type name
+     * @param array $expected Expected fields
      * @return void
      *
+     * @dataProvider objectsProvider
      * @covers ::objectFields()
      * @covers ::objectProperties()
      * @covers ::clear()
      *
-     * @dataProvider objectsProvider
      */
     public function testObjectFields($type, $expected)
     {
