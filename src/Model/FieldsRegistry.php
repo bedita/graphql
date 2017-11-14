@@ -25,6 +25,13 @@ use Cake\Utility\Inflector;
 class FieldsRegistry
 {
     /**
+     * Cache config name used (object types).
+     *
+     * @var string
+     */
+    const CACHE_CONFIG = '_bedita_object_types_';
+
+    /**
      * Resource fields internal registry
      *
      * @var array
@@ -61,7 +68,7 @@ class FieldsRegistry
             $fields = [];
             $properties = static::objectProperties($name);
             foreach ($properties as $prop) {
-                $fields[$prop] = TypesRegistry::string();
+                $fields[$prop->get('name')] = TypesRegistry::string();
             }
             self::$objectFields[$name] = $fields;
         }
@@ -95,10 +102,12 @@ class FieldsRegistry
     public static function objectProperties($name)
     {
         $objectType = TableRegistry::get('ObjectTypes')->get($name);
-        $table = TableRegistry::get($objectType->alias);
-        $entity = $table->newEntity();
 
-        return array_diff($table->getSchema()->columns(), $entity->hiddenProperties());
+        $properties = TableRegistry::get('Properties')->find('objectType', [$name])
+            ->cache(sprintf('id_%s_props', $objectType->get('id')), self::CACHE_CONFIG)
+            ->toArray();
+
+        return $properties;
     }
 
     /**
