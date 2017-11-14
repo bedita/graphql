@@ -46,6 +46,13 @@ class FieldsRegistry
     private static $objectFields = [];
 
     /**
+     * Input filter fields internal registry
+     *
+     * @var array
+     */
+    private static $filterFields = [];
+
+    /**
      * Clear internal registry
      *
      * @return void
@@ -54,6 +61,7 @@ class FieldsRegistry
     {
         self::$resourceFields = [];
         self::$objectFields = [];
+        self::$filterFields = [];
     }
 
     /**
@@ -122,5 +130,45 @@ class FieldsRegistry
         $entity = $table->newEntity();
 
         return array_diff($table->getSchema()->columns(), $entity->hiddenProperties());
+    }
+
+    /**
+     * Retrieve a list of fields for input filter
+     *
+     * @param array $options Input filter options
+     * @return array
+     */
+    public static function inputFilterFields($options = [])
+    {
+        if (empty(self::$filterFields)) {
+            $fields = [];
+            self::$filterFields = static::filterProperties($options);
+        }
+
+        return self::$filterFields;
+    }
+
+    /**
+     * Retrieve input filter properties
+     *
+     * @param array $options Input filter options
+     * @return array
+     */
+    public static function filterProperties($options = [])
+    {
+        return [
+            'field_name' => [
+                'type' => TypesRegistry::string(),
+                'description' => 'Name of the field to filter'
+            ],
+            'field_value' => [
+                'type' => TypesRegistry::string(),
+                'description' => 'Field value to look up'
+            ],
+            'query' => [
+                'type' => TypesRegistry::string(),
+                'description' => 'Search query to perform'
+            ],
+        ];
     }
 }

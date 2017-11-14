@@ -38,7 +38,7 @@ class TypesRegistryTest extends TestCase
         'plugin.BEdita/Core.locations',
         'plugin.BEdita/Core.media',
         'plugin.BEdita/Core.profiles',
-        'plugin.BEdita/Core.applications',
+        'plugin.BEdita/Core.streams',
         'plugin.BEdita/Core.roles',
         'plugin.BEdita/Core.users',
     ];
@@ -61,8 +61,6 @@ class TypesRegistryTest extends TestCase
         $result = TypesRegistry::rootTypes();
 
         $expected = [
-            'application',
-            'applications',
             'document',
             'documents',
             'event',
@@ -81,6 +79,8 @@ class TypesRegistryTest extends TestCase
             'profiles',
             'role',
             'roles',
+            'stream',
+            'streams',
             'user',
             'users',
         ];
@@ -119,7 +119,7 @@ class TypesRegistryTest extends TestCase
                 'roles',
                 TypesRegistry::RESOURCES_LIST,
             ],
-            'guatavo' => [
+            'gustavo' => [
                 'gustavo',
                 false,
             ],

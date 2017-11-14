@@ -13,6 +13,7 @@
 
 namespace BEdita\GraphQL\Model;
 
+use BEdita\GraphQL\Model\Type\InputFilterType;
 use BEdita\GraphQL\Model\Type\ObjectsType;
 use BEdita\GraphQL\Model\Type\QueryType;
 use BEdita\GraphQL\Model\Type\ResourcesType;
@@ -79,6 +80,13 @@ class TypesRegistry
     private static $query;
 
     /**
+     * Input filter type
+     *
+     * @var \BEdita\GraphQL\Model\Type\InputFilterType
+     */
+    private static $inputFilter;
+
+    /**
      * Resource type names registry
      * Format: {plural_name} => {singular_name}
      *
@@ -86,7 +94,7 @@ class TypesRegistry
      */
     private static $resourceTypeNames = [
         'roles' => 'role',
-        'applications' => 'application',
+        'streams' => 'stream',
     ];
 
     /**
@@ -130,6 +138,9 @@ class TypesRegistry
                 'type' => static::listOf(static::resourceType($name)),
                 'description' => sprintf('Get list of "%s"', $name),
                 'args' => [
+                    'filter' => [
+                        'type' => static::nonNull(static::inputFilter()),
+                    ],
                 ],
             ];
         }
@@ -147,6 +158,9 @@ class TypesRegistry
                 'type' => static::listOf(static::objectType($name)),
                 'description' => sprintf('Get list of "%s"', $name),
                 'args' => [
+                    'filter' => [
+                        'type' => static::nonNull(static::inputFilter()),
+                    ],
                 ],
             ];
         }
@@ -240,6 +254,15 @@ class TypesRegistry
         }
 
         return false;
+    }
+
+    /**
+     * @return \BEdita\GraphQL\Model\Type\InputFilterType
+     * @codeCoverageIgnore
+     */
+    public static function inputFilter()
+    {
+        return self::$inputFilter ?: (self::$inputFilter = new InputFilterType());
     }
 
     /**

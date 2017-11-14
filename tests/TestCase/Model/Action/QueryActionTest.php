@@ -40,8 +40,64 @@ class QueryActionTest extends TestCase
         'plugin.BEdita/Core.media',
         'plugin.BEdita/Core.profiles',
         'plugin.BEdita/Core.roles',
+        'plugin.BEdita/Core.streams',
         'plugin.BEdita/Core.users',
     ];
+
+    /**
+     * Data provider for `testExecute`
+     *
+     * @return void
+     */
+    public function executeProvider()
+    {
+        return [
+            'user' => [
+                [
+                    'data' => [
+                        'user' => [
+                            'username' => 'first user',
+                        ],
+                    ],
+                ],
+                '{user(id: "1") { username }}',
+            ],
+            'role' => [
+                [
+                    'data' => [
+                        'role' => [
+                            'name' => 'first role',
+                        ],
+                    ],
+                ],
+                '{role(id: "1") { name }}',
+             ],
+            'usersFilter' => [
+                [
+                    'data' => [
+                        'users' => [
+                            [
+                                'username' => 'second user',
+                            ]
+                        ],
+                    ],
+                ],
+                '{users(filter: {query: "second"}) { username }}',
+            ],
+            'streamsFilter' => [
+                [
+                    'data' => [
+                        'streams' => [
+                            [
+                                'mime_type' => 'image/png',
+                            ]
+                        ],
+                    ],
+                ],
+                '{streams(filter: {field_name: "file_name", field_value: "bedita_logo.png"}) { mime_type }}',
+            ],
+         ];
+    }
 
     /**
      * Test simple query execution.
@@ -53,39 +109,14 @@ class QueryActionTest extends TestCase
      * @covers \BEdita\GraphQL\Model\Type\ObjectsType::__construct()
      * @covers \BEdita\GraphQL\Model\Type\QueryType::__construct()
      * @covers \BEdita\GraphQL\Model\Type\ResourcesType::__construct()
+     *
+     * @dataProvider executeProvider
      */
-    public function testExecute()
+    public function testExecute($expected, $query)
     {
-        $query = '{user(id: "1") { username }}';
         $action = new QueryAction();
         $result = $action(compact('query'));
 
-        $expected = [
-            'data' => [
-                'user' => [
-                    'username' => 'first user',
-                ]
-            ]
-        ];
-
-        static::assertArrayHasKey('data', $result);
-        static::assertArrayNotHasKey('errors', $result);
-        static::assertEquals($expected, $result);
-
-        $query = '{role(id: "1") { name }}';
-        $action = new QueryAction();
-        $result = $action(compact('query'));
-
-        $expected = [
-            'data' => [
-                'role' => [
-                    'name' => 'first role',
-                ]
-            ]
-        ];
-
-        static::assertArrayHasKey('data', $result);
-        static::assertArrayNotHasKey('errors', $result);
         static::assertEquals($expected, $result);
     }
 }
