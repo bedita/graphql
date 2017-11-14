@@ -109,9 +109,29 @@ class QueryType extends ObjectType
     {
         $table = TableRegistry::get(Inflector::camelize($info->fieldName));
         $action = new ListEntitiesAction(compact('table'));
-        $filter = empty($args['filter']) ? [] : $args['filter'];
+        $filter = $this->createFilter($args);
 
         return $action(compact('filter'));
+    }
+
+    /**
+     * Create `filter` array from query args
+     *
+     * @param mixed $args Arguments to resolve items
+     * @return array Filter array
+     */
+    protected function createFilter($args)
+    {
+        if (empty($args['filter'])) {
+            return [];
+        }
+        $filter = $args['filter'];
+        if (!empty($filter['field_name'])) {
+            $filter[$filter['field_name']] = empty($filter['field_value']) ? null : $filter['field_value'];
+            unset($filter['field_name'], $filter['field_value']);
+        }
+
+        return $filter;
     }
 
     /**
@@ -146,7 +166,7 @@ class QueryType extends ObjectType
         $objectType = TableRegistry::get('ObjectTypes')->get($info->fieldName);
         $table = TableRegistry::get($objectType->alias);
         $action = new ListObjectsAction(compact('table', 'objectType'));
-        $filter = empty($args['filter']) ? [] : $args['filter'];
+        $filter = $this->createFilter($args);
 
         return $action(compact('filter'));
     }

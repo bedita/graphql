@@ -40,6 +40,7 @@ class QueryTypeTest extends TestCase
         'plugin.BEdita/Core.objects',
         'plugin.BEdita/Core.locations',
         'plugin.BEdita/Core.media',
+        'plugin.BEdita/Core.streams',
         'plugin.BEdita/Core.profiles',
         'plugin.BEdita/Core.applications',
         'plugin.BEdita/Core.roles',
@@ -51,7 +52,7 @@ class QueryTypeTest extends TestCase
      *
      * @return void
      */
-    public function resolveProvider()
+    public function resolveSingleProvider()
     {
         return [
             'user' => [
@@ -64,19 +65,6 @@ class QueryTypeTest extends TestCase
                 ['id' => 1],
                 ['name' => 'first role'],
             ],
-            'users' => [
-                'users',
-                null,
-                [
-                    0 => 'BEdita\Core\Model\Entity\User',
-                    1 => 'BEdita\Core\Model\Entity\User',
-                ],
-            ],
-            'roles' => [
-                'roles',
-                null,
-                [0 => 'BEdita\Core\Model\Entity\Role'],
-            ],
             'gustavo' => [
                 'gustavo',
                 null,
@@ -86,19 +74,20 @@ class QueryTypeTest extends TestCase
     }
 
     /**
-     * Test simple resource type creation
+     * Test `resolve` on single item
      *
+     * @param string $type Type to resolve
+     * @param array $args Input args
+     * @param mixed $expected Expected result
      * @return void
      *
      * @covers ::__construct()
      * @covers ::resolve()
      * @covers ::resolveResource()
-     * @covers ::resolveResourcesList()
      * @covers ::resolveObject()
-     * @covers ::resolveObjectsList()
-     * @dataProvider resolveProvider
+     * @dataProvider resolveSingleProvider
      */
-    public function testResolve($type, $args, $expected)
+    public function testResolveSingle($type, $args, $expected)
     {
         if ($expected instanceof \Exception) {
             $this->expectException(get_class($expected));
@@ -114,11 +103,99 @@ class QueryTypeTest extends TestCase
         static::assertNotEmpty($result);
         foreach ($expected as $key => $value) {
             static::assertArrayHasKey($key, $result);
-            if (is_numeric($key)) {
-                static::assertEquals($value, get_class($result[$key]));
-            } else {
-                static::assertEquals($value, $result[$key]);
-            }
+            static::assertEquals($value, $result[$key]);
         }
+    }
+
+    /**
+     * Data provider for `testResolveList`
+     *
+     * @return void
+     */
+    public function resolveListProvider()
+    {
+        return [
+            'users' => [
+                'users',
+                [
+                    'filter' => [
+                        'query' => 'second',
+                    ],
+                ],
+                [
+                    0 => 'BEdita\Core\Model\Entity\User',
+                ],
+            ],
+            'streams' => [
+                'streams',
+                [
+                    'filter' => [
+                        'field_name' => 'file_name',
+                        'field_value' => 'bedita_logo.png',
+                    ],
+                ],
+                [
+                    0 => 'BEdita\Core\Model\Entity\Stream',
+                ],
+            ],
+            'roles' => [
+                'roles',
+                [],
+                [
+                    0 => 'BEdita\Core\Model\Entity\Role',
+                    1 => 'BEdita\Core\Model\Entity\Role',
+                ],
+            ],
+         ];
+    }
+
+    /**
+     * Test simple resource type creation
+     *
+     * @param string $type Type to resolve
+     * @param array $args Input args
+     * @param mixed $expected Expected result
+     * @return void
+     *
+     * @covers ::__construct()
+     * @covers ::resolve()
+     * @covers ::resolveResourcesList()
+     * @covers ::resolveObjectsList()
+     * @covers ::createFilter()
+     * @dataProvider resolveListProvider
+     */
+    public function testResolveList($type, $args, $expected)
+    {
+        if ($expected instanceof \Exception) {
+            $this->expectException(get_class($expected));
+            $this->expectExceptionMessage($expected->getMessage());
+        }
+
+        $queryType = new QueryType();
+
+        $info = new ResolveInfo(['fieldName' => $type]);
+        $result = $queryType->resolve(null, $args, new AppContext(), $info);
+
+        $result = $result->toArray();
+        static::assertNotEmpty($result);
+        static::assertEquals(count($result), count($expected));
+        foreach ($expected as $key => $value) {
+            static::assertArrayHasKey($key, $result);
+            static::assertEquals($value, get_class($result[$key]));
+        }
+    }
+
+    /**
+     * Trivial constructor test
+     *
+     * @return void
+     *
+     * @covers ::__construct()
+     */
+    public function testConstruct()
+    {
+        $queryType = new QueryType();
+        $fields = $queryType->getFields();
+        static::assertNotEmpty($fields);
     }
 }

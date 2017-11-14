@@ -24,6 +24,7 @@ class GraphQLControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'plugin.BEdita/Core.locations',
+        'plugin.BEdita/Core.streams',
         'plugin.BEdita/Core.media',
     ];
 
