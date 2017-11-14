@@ -126,4 +126,30 @@ class FieldsRegistryTest extends TestCase
             static::assertArrayHasKey($value, $result);
         }
     }
+
+    /**
+     * Test `inputFilterFields`
+     *
+     * @return void
+     *
+     * @covers ::inputFilterFields()
+     * @covers ::filterProperties()
+     * @covers ::clear()
+     */
+    public function testInputTypeFields()
+    {
+        FieldsRegistry::clear();
+        $fields = FieldsRegistry::inputFilterFields();
+
+        $expected = [
+            'field_name',
+            'field_value',
+            'query',
+        ];
+
+        static::assertNotEmpty($fields);
+        foreach ($expected as $key) {
+            static::assertArrayHasKey($key, $fields);
+        }
+    }
 }
