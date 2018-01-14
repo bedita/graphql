@@ -76,7 +76,7 @@ class FieldsRegistry
             $fields = [];
             $properties = static::objectProperties($name);
             foreach ($properties as $prop) {
-                $fields[$prop->get('name')] = TypesRegistry::string();
+                $fields[$prop->get('name')] = TypesRegistry::fromPropertySchema($prop->getSchema());
             }
             self::$objectFields[$name] = $fields;
         }

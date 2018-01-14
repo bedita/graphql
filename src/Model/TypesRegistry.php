@@ -13,14 +13,17 @@
 
 namespace BEdita\GraphQL\Model;
 
+use BEdita\GraphQL\Model\Type\DateTimeType;
 use BEdita\GraphQL\Model\Type\InputFilterType;
 use BEdita\GraphQL\Model\Type\ObjectsType;
 use BEdita\GraphQL\Model\Type\QueryType;
 use BEdita\GraphQL\Model\Type\ResourcesType;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
+use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Definition\Type;
 
 /**
@@ -71,6 +74,13 @@ class TypesRegistry
      * @var array
      */
     private static $objectTypes = [];
+
+    /**
+     * DateTime type
+     *
+     * @var BEdita\GraphQL\Model\Type\DateTimeType
+     */
+    private static $dateTime;
 
     /**
      * Query type
@@ -275,6 +285,15 @@ class TypesRegistry
     }
 
     /**
+     * @return \BEdita\GraphQL\Model\Type\DateTimeType
+     * @codeCoverageIgnore
+     */
+    public static function dateTime()
+    {
+        return self::$dateTime ?: (self::$dateTime = new DateTimeType());
+    }
+
+    /**
      * @return \GraphQL\Type\Definition\BooleanType
      * @codeCoverageIgnore
      */
@@ -337,5 +356,58 @@ class TypesRegistry
     public static function nonNull($type)
     {
         return new NonNull($type);
+    }
+
+    /**
+     * Return property type from JSON Schema array
+     * Defaults to Type::string() if no match is found.
+     *
+     * @param array $schema Property JSON schema
+     * @return NonNull|ScalarType|EnumType
+     */
+    public static function fromPropertySchema(array $schema)
+    {
+        if (!empty($schema['type'])) {
+            return static::propertyFromTypeSchema($schema);
+        }
+
+        if (!empty($schema['oneOf']) && \count($schema['oneOf']) === 2) {
+            $types = Hash::extract($schema, 'oneOf.{n}.type');
+            if ($types[0] == 'null') {
+                return static::propertyFromTypeSchema($schema['oneOf'][1]);
+            } elseif ($types[1] == 'null') {
+                return static::propertyFromTypeSchema($schema['oneOf'][0]);
+            }
+        }
+
+        // no type match found - defaults to string
+        return static::string();
+    }
+
+    /**
+     * Return property type from JSON Schema `type` and `format` info
+     * Defaults to Type::string() if no match is found.
+     *
+     * @param array $schema Property JSON schema, 'type' key MUST be present
+     * @return NonNull|ScalarType|EnumType
+     */
+    protected static function propertyFromTypeSchema(array $schema)
+    {
+        switch ($schema['type']) {
+            case 'number':
+                return static::float();
+            case 'integer':
+                return static::int();
+            case 'boolean':
+                return static::boolean();
+            case 'string':
+                if (!empty($schema['format']) && $schema['format'] == 'date-time') {
+                    return static::dateTime();
+                }
+
+                return static::string();
+            default:
+                return static::string();
+        }
     }
 }
