@@ -13,6 +13,7 @@
 
 namespace BEdita\GraphQL\Model;
 
+use BEdita\Core\Model\Entity\StaticProperty;
 use BEdita\GraphQL\Model\TypesRegistry;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
@@ -92,13 +93,16 @@ class FieldsRegistry
      */
     public static function resourceFields($name)
     {
-        $fields = [];
-        $properties = static::resourceProperties($name);
-        foreach ($properties as $prop) {
-            $fields[$prop] = TypesRegistry::string();
+        if (empty(self::$resourceFields[$name])) {
+            $fields = [];
+            $properties = static::resourceProperties($name);
+            foreach ($properties as $prop) {
+                $fields[$prop->get('name')] = TypesRegistry::fromPropertySchema($prop->getSchema());
+            }
+            self::$resourceFields[$name] = $fields;
         }
 
-        return $fields;
+        return self::$resourceFields[$name];
     }
 
     /**
@@ -129,7 +133,13 @@ class FieldsRegistry
         $table = TableRegistry::get(Inflector::camelize($name));
         $entity = $table->newEntity();
 
-        return array_diff($table->getSchema()->columns(), $entity->hiddenProperties());
+        $properties = [];
+        $names = array_diff($table->getSchema()->columns(), $entity->hiddenProperties());
+        foreach ($names as $name) {
+            $properties[] = new StaticProperty(compact('name', 'table'));
+        }
+
+        return $properties;
     }
 
     /**
