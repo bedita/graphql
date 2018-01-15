@@ -50,12 +50,11 @@ class DateTimeType extends ScalarType
             throw new InvariantViolation("DateTime can represent only strings or integer values: " . Utils::printSafe($value));
         }
 
-        return (string) $value;
+        return (string)$value;
     }
 
     /**
-     * @param mixed $value
-     * @return string
+     * {@inheritDoc}
      * @codeCoverageIgnore
      */
     public function parseValue($value)
@@ -64,8 +63,7 @@ class DateTimeType extends ScalarType
     }
 
     /**
-     * @param mixed $ast AST input
-     * @return null|string
+     * {@inheritDoc}
      */
     public function parseLiteral($ast)
     {
