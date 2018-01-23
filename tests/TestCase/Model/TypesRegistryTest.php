@@ -141,4 +141,90 @@ class TypesRegistryTest extends TestCase
         $result = TypesRegistry::inspectTypeName($name);
         static::assertEquals($result, $expected);
     }
+
+    /**
+     * Data provider for `testPropertySchema`
+     *
+     * @return void
+     */
+    public function propertySchemaProvider()
+    {
+        return [
+            'date' => [
+                [
+                    'type' => 'string',
+                    'format' => 'date-time',
+                ],
+                TypesRegistry::dateTime(),
+            ],
+            'int' => [
+                [
+                    'oneOf' => [
+                        [
+                            'type' => 'null',
+                        ],
+                        [
+                            'type' => 'integer',
+                        ]
+                    ],
+                ],
+                TypesRegistry::int(),
+            ],
+            'bool' => [
+                [
+                    'oneOf' => [
+                        [
+                            'type' => 'boolean',
+                        ],
+                        [
+                            'type' => 'null',
+                        ]
+                    ],
+                ],
+                TypesRegistry::boolean(),
+            ],
+            'float' => [
+                [
+                    'type' => 'number',
+                ],
+                TypesRegistry::float(),
+            ],
+            'text' => [
+                [
+                    'type' => 'string',
+                    'contentMediaType' => 'text/html',
+                ],
+                TypesRegistry::string(),
+            ],
+            'unknown' => [
+                [
+                    'type' => 'sometype',
+                ],
+                TypesRegistry::string(),
+            ],
+            'moreunknown' => [
+                [
+                    'unknown' => 'weirdtype',
+                ],
+                TypesRegistry::string(),
+            ],
+        ];
+    }
+
+    /**
+     * Test `fromPropertySchema` method
+     *
+     * @return void
+     *
+     * @param array $schema Property JSON schema
+     * @param mixed $expected Expected property type
+     * @covers ::fromPropertySchema()
+     * @covers ::propertyFromTypeSchema()
+     * @dataProvider propertySchemaProvider
+     */
+    public function testPropertySchema(array $schema, $expected)
+    {
+        $result = TypesRegistry::fromPropertySchema($schema);
+        static::assertEquals($result, $expected);
+    }
 }

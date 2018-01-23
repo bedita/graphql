@@ -30,6 +30,9 @@ class ResourcesTypeTest extends TestCase
      * @var array
      */
     public $fixtures = [
+        'plugin.BEdita/Core.property_types',
+        'plugin.BEdita/Core.object_types',
+        'plugin.BEdita/Core.properties',
         'plugin.BEdita/Core.roles',
         'plugin.BEdita/Core.applications',
     ];
