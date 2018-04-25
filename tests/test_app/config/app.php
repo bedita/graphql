@@ -157,4 +157,27 @@ return [
             'path' => WWW_ROOT . DS . 'files',
         ],
     ],
+
+    'Thumbnails' => [
+        'allowAny' => filter_var(env('THUMBNAILS_ALLOW_ANY', false), FILTER_VALIDATE_BOOLEAN),
+        'presets' => [
+            'default' => [
+                // 'generator' => 'async',
+                'w' => 768,
+                'h' => 576,
+            ],
+        ],
+        'generators' => [
+            'default' => [
+                'className' => 'BEdita/Core.Glide',
+                // 'cache' => 'thumbnails',
+                'url' => env('THUMBNAILS_DEFAULT_URL', null),
+            ],
+            'async' => [
+                'className' => 'BEdita/Core.Async',
+                // 'baseGenerator' => 'default',
+                'url' => env('THUMBNAILS_ASYNC_URL', null),
+            ],
+        ],
+    ],
 ];

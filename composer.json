@@ -14,7 +14,7 @@
         "webonyx/graphql-php": "~0.10"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
+        "phpunit/phpunit": "^5.7|^6.0",
         "cakephp/cakephp-codesniffer": "~3.0"
     },
     "autoload": {
