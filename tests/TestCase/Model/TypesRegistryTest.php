@@ -67,6 +67,8 @@ class TypesRegistryTest extends TestCase
             'events',
             'file',
             'files',
+            'folder',
+            'folders',
             'location',
             'locations',
             'media',
