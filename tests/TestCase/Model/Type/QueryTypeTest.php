@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -50,9 +52,9 @@ class QueryTypeTest extends TestCase
     /**
      * Data provider for `testResolve`
      *
-     * @return void
+     * @return array
      */
-    public function resolveSingleProvider()
+    public function resolveSingleProvider(): array
     {
         return [
             'user' => [
@@ -80,14 +82,13 @@ class QueryTypeTest extends TestCase
      * @param array $args Input args
      * @param mixed $expected Expected result
      * @return void
-     *
      * @covers ::__construct()
      * @covers ::resolve()
      * @covers ::resolveResource()
      * @covers ::resolveObject()
      * @dataProvider resolveSingleProvider
      */
-    public function testResolveSingle($type, $args, $expected)
+    public function testResolveSingle($type, $args, $expected): void
     {
         if ($expected instanceof \Exception) {
             $this->expectException(get_class($expected));
@@ -110,9 +111,9 @@ class QueryTypeTest extends TestCase
     /**
      * Data provider for `testResolveList`
      *
-     * @return void
+     * @return array
      */
-    public function resolveListProvider()
+    public function resolveListProvider(): array
     {
         return [
             'users' => [
@@ -156,7 +157,6 @@ class QueryTypeTest extends TestCase
      * @param array $args Input args
      * @param mixed $expected Expected result
      * @return void
-     *
      * @covers ::__construct()
      * @covers ::resolve()
      * @covers ::resolveResourcesList()
@@ -164,7 +164,7 @@ class QueryTypeTest extends TestCase
      * @covers ::createFilter()
      * @dataProvider resolveListProvider
      */
-    public function testResolveList($type, $args, $expected)
+    public function testResolveList($type, $args, $expected): void
     {
         if ($expected instanceof \Exception) {
             $this->expectException(get_class($expected));
@@ -189,10 +189,9 @@ class QueryTypeTest extends TestCase
      * Trivial constructor test
      *
      * @return void
-     *
      * @covers ::__construct()
      */
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $queryType = new QueryType();
         $fields = $queryType->getFields();

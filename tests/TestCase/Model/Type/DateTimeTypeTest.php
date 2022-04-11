@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2018 ChannelWeb Srl, Chialab Srl
@@ -14,7 +16,7 @@
 namespace BEdita\GraphQL\Test\TestCase\Model\Type;
 
 use BEdita\GraphQL\Model\Type\DateTimeType;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
 use GraphQL\Error\InvariantViolation;
 use GraphQL\Language\AST\StringValueNode;
@@ -34,9 +36,9 @@ class DateTimeTypeTest extends TestCase
     public $dateTimeType;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->dateTimeType = new DateTimeType();
@@ -45,13 +47,13 @@ class DateTimeTypeTest extends TestCase
     /**
      * Data provider for `testSerialiaze`
      *
-     * @return void
+     * @return array
      */
-    public function serialiazeProvider()
+    public function serialiazeProvider(): array
     {
         return [
             'time' => [
-                Time::parse('2018-01-07 12:40:19'),
+                FrozenTime::parse('2018-01-07 12:40:19'),
                 '2018-01-07T12:40:19+00:00',
             ],
             'string' => [
@@ -69,11 +71,10 @@ class DateTimeTypeTest extends TestCase
      * Test `serialize` method
      *
      * @return void
-     *
      * @covers ::serialize()
      * @dataProvider serialiazeProvider
      */
-    public function testSerialiaze($input, $expected)
+    public function testSerialiaze($input, $expected): void
     {
         if ($expected instanceof \Exception) {
             $this->expectException(get_class($expected));
@@ -87,10 +88,9 @@ class DateTimeTypeTest extends TestCase
      * Test `parseValue` method
      *
      * @return void
-     *
      * @covers ::parseLiteral()
      */
-    public function testParseLiteral()
+    public function testParseLiteral(): void
     {
         $date = '2018-01-01';
         $ast = new StringValueNode([]);

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -14,7 +16,6 @@
 namespace BEdita\GraphQL\Test\TestCase\Model\Action;
 
 use BEdita\GraphQL\Model\Action\QueryAction;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -49,7 +50,7 @@ class QueryActionTest extends TestCase
      *
      * @return void
      */
-    public function executeProvider()
+    public function executeProvider(): array
     {
         return [
             'user' => [
@@ -78,7 +79,7 @@ class QueryActionTest extends TestCase
                         'users' => [
                             [
                                 'username' => 'second user',
-                            ]
+                            ],
                         ],
                     ],
                 ],
@@ -90,7 +91,7 @@ class QueryActionTest extends TestCase
                         'streams' => [
                             [
                                 'mime_type' => 'image/png',
-                            ]
+                            ],
                         ],
                     ],
                 ],
@@ -103,16 +104,14 @@ class QueryActionTest extends TestCase
      * Test simple query execution.
      *
      * @return void
-     *
      * @covers ::execute()
      * @covers ::buildSchema()
      * @covers \BEdita\GraphQL\Model\Type\ObjectsType::__construct()
      * @covers \BEdita\GraphQL\Model\Type\QueryType::__construct()
      * @covers \BEdita\GraphQL\Model\Type\ResourcesType::__construct()
-     *
      * @dataProvider executeProvider
      */
-    public function testExecute($expected, $query)
+    public function testExecute($expected, $query): void
     {
         $action = new QueryAction();
         $result = $action(compact('query'));

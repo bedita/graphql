@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -15,8 +17,6 @@ namespace BEdita\GraphQL\Model\Type;
 
 use BEdita\GraphQL\Model\FieldsRegistry;
 use GraphQL\Type\Definition\InputObjectType;
-use GraphQL\Type\Definition\ResolveInfo;
-use GraphQL\Type\Definition\Type;
 
 /**
  * BEdita graphql input filter on objects list.
@@ -26,7 +26,7 @@ use GraphQL\Type\Definition\Type;
 class InputFilterType extends InputObjectType
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __construct($options = [])
     {

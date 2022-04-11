@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -24,7 +26,6 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
-use GraphQL\Type\Definition\Type;
 
 /**
  * GraphQL root BEdita query.
@@ -34,7 +35,7 @@ use GraphQL\Type\Definition\Type;
 class QueryType extends ObjectType
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __construct()
     {
@@ -45,7 +46,7 @@ class QueryType extends ObjectType
             },
             'resolveField' => function ($val, $args, $context, ResolveInfo $info) {
                 return $this->resolve($val, $args, $context, $info);
-            }
+            },
         ];
         parent::__construct($config);
     }
@@ -55,9 +56,8 @@ class QueryType extends ObjectType
      *
      * @param mixed $rootValue Root value - currently unused
      * @param mixed $args Arguments to resolve an item - currently only 'id' supported
-     * @param AppContext $context Application context
-     * @param ResolveInfo $info Resolve information
-     *
+     * @param \BEdita\GraphQL\Model\AppContext $context Application context
+     * @param \GraphQL\Type\Definition\ResolveInfo $info Resolve information
      * @return mixed
      */
     public function resolve($rootValue, $args, AppContext $context, ResolveInfo $info)
@@ -83,14 +83,14 @@ class QueryType extends ObjectType
      *
      * @param mixed $rootValue Root value
      * @param mixed $args Arguments to resolve items
-     * @param AppContext $context Application context
-     * @param ResolveInfo $info Resolve information
+     * @param \BEdita\GraphQL\Model\AppContext $context Application context
+     * @param \GraphQL\Type\Definition\ResolveInfo $info Resolve information
      * @return mixed
      */
     protected function resolveResource($rootValue, $args, AppContext $context, ResolveInfo $info)
     {
         $singularized = array_flip(TypesRegistry::resourceTypeNames());
-        $table = TableRegistry::get(Inflector::camelize($singularized[$info->fieldName]));
+        $table = TableRegistry::getTableLocator()->get(Inflector::camelize($singularized[$info->fieldName]));
         $action = new GetEntityAction(compact('table'));
 
         return $action(['primaryKey' => $args['id']]);
@@ -101,13 +101,13 @@ class QueryType extends ObjectType
      *
      * @param mixed $rootValue Root value
      * @param mixed $args Arguments to resolve items
-     * @param AppContext $context Application context
-     * @param ResolveInfo $info Resolve information
+     * @param \BEdita\GraphQL\Model\AppContext $context Application context
+     * @param \GraphQL\Type\Definition\ResolveInfo $info Resolve information
      * @return mixed
      */
     protected function resolveResourcesList($rootValue, $args, AppContext $context, ResolveInfo $info)
     {
-        $table = TableRegistry::get(Inflector::camelize($info->fieldName));
+        $table = TableRegistry::getTableLocator()->get(Inflector::camelize($info->fieldName));
         $action = new ListEntitiesAction(compact('table'));
         $filter = $this->createFilter($args);
 
@@ -139,14 +139,14 @@ class QueryType extends ObjectType
      *
      * @param mixed $rootValue Root value
      * @param mixed $args Arguments to resolve items
-     * @param AppContext $context Application context
-     * @param ResolveInfo $info Resolve information
+     * @param \BEdita\GraphQL\Model\AppContext $context Application context
+     * @param \GraphQL\Type\Definition\ResolveInfo $info Resolve information
      * @return mixed
      */
     protected function resolveObject($rootValue, $args, AppContext $context, ResolveInfo $info)
     {
-        $objectType = TableRegistry::get('ObjectTypes')->get($info->fieldName);
-        $table = TableRegistry::get($objectType->alias);
+        $objectType = TableRegistry::getTableLocator()->get('ObjectTypes')->get($info->fieldName);
+        $table = TableRegistry::getTableLocator()->get($objectType->alias);
         $action = new GetObjectAction(compact('table', 'objectType'));
 
         return $action(['primaryKey' => $args['id']]);
@@ -157,14 +157,14 @@ class QueryType extends ObjectType
      *
      * @param mixed $rootValue Root value
      * @param mixed $args Arguments to resolve items
-     * @param AppContext $context Application context
-     * @param ResolveInfo $info Resolve information
+     * @param \BEdita\GraphQL\Model\AppContext $context Application context
+     * @param \GraphQL\Type\Definition\ResolveInfo $info Resolve information
      * @return mixed
      */
     protected function resolveObjectsList($rootValue, $args, AppContext $context, ResolveInfo $info)
     {
-        $objectType = TableRegistry::get('ObjectTypes')->get($info->fieldName);
-        $table = TableRegistry::get($objectType->alias);
+        $objectType = TableRegistry::getTableLocator()->get('ObjectTypes')->get($info->fieldName);
+        $table = TableRegistry::getTableLocator()->get($objectType->alias);
         $action = new ListObjectsAction(compact('table', 'objectType'));
         $filter = $this->createFilter($args);
 

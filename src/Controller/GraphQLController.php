@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
- * Copyright 2017 ChannelWeb Srl, Chialab Srl
+ * Copyright 2022 ChannelWeb Srl, Chialab Srl
  *
  * This file is part of BEdita: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -12,11 +14,9 @@
  */
 namespace BEdita\GraphQL\Controller;
 
-use BEdita\API\Controller\AppController as BaseController;
+use BEdita\API\Controller\JsonBaseController;
 use BEdita\GraphQL\Model\Action\QueryAction;
-use Cake\Core\Configure;
-use Cake\Event\Event;
-use Cake\Log\Log;
+use Cake\Event\EventInterface;
 use Cake\Utility\Hash;
 
 /**
@@ -24,13 +24,12 @@ use Cake\Utility\Hash;
  *
  * See http://graphql.org
  */
-class GraphQLController extends BaseController
+class GraphQLController extends JsonBaseController
 {
-
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -41,10 +40,7 @@ class GraphQLController extends BaseController
             if ($contentType !== 'application/json') {
                 $this->request = $this->request->withHeader('Content-Type', 'application/json');
             }
-            $this->RequestHandler->setConfig('inputTypeMap.json', ['json_decode', true], false);
         }
-
-        $this->viewBuilder()->className('Json');
     }
 
     /**
@@ -52,7 +48,7 @@ class GraphQLController extends BaseController
      *
      * @codeCoverageIgnore
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(EventInterface $event)
     {
     }
 
@@ -62,7 +58,7 @@ class GraphQLController extends BaseController
      *
      * @return array
      */
-    protected function readInput()
+    protected function readInput(): array
     {
         $data = $this->request->getData();
         if (!empty($data)) {
@@ -87,7 +83,7 @@ class GraphQLController extends BaseController
      *
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
         $this->request->allowMethod(['get', 'post']);
 
@@ -102,6 +98,6 @@ class GraphQLController extends BaseController
             $this->response = $this->response->withStatus($status);
         }
         $this->set([$key => $result[$key]]);
-        $this->set('_serialize', [$key]);
+        $this->setSerialize([$key]);
     }
 }

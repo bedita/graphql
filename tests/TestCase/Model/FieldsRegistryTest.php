@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -46,9 +48,9 @@ class FieldsRegistryTest extends TestCase
     /**
      * Data provider for `testObjectFields`
      *
-     * @return void
+     * @return array
      */
-    public function objectsProvider()
+    public function objectsProvider(): array
     {
         return [
             'users' => [
@@ -68,14 +70,12 @@ class FieldsRegistryTest extends TestCase
      * @param string $type Object type name
      * @param array $expected Expected fields
      * @return void
-     *
      * @dataProvider objectsProvider
      * @covers ::objectFields()
      * @covers ::objectProperties()
      * @covers ::clear()
-     *
      */
-    public function testObjectFields($type, $expected)
+    public function testObjectFields($type, $expected): void
     {
         FieldsRegistry::clear();
         $result = FieldsRegistry::objectFields($type);
@@ -89,9 +89,9 @@ class FieldsRegistryTest extends TestCase
     /**
      * Data provider for `testResourceFields`
      *
-     * @return void
+     * @return array
      */
-    public function resourcesProvider()
+    public function resourcesProvider(): array
     {
         return [
             'roles' => [
@@ -109,14 +109,12 @@ class FieldsRegistryTest extends TestCase
      * Test `resourceFields` method
      *
      * @return void
-     *
      * @covers ::resourceFields()
      * @covers ::resourceProperties()
      * @covers ::clear()
-     *
      * @dataProvider resourcesProvider
      */
-    public function testResourceFields($type, $expected)
+    public function testResourceFields($type, $expected): void
     {
         FieldsRegistry::clear();
         $result = FieldsRegistry::resourceFields($type);
@@ -131,12 +129,11 @@ class FieldsRegistryTest extends TestCase
      * Test `inputFilterFields`
      *
      * @return void
-     *
      * @covers ::inputFilterFields()
      * @covers ::filterProperties()
      * @covers ::clear()
      */
-    public function testInputTypeFields()
+    public function testInputTypeFields(): void
     {
         FieldsRegistry::clear();
         $fields = FieldsRegistry::inputFilterFields();

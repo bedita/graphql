@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
- * Copyright 2017 ChannelWeb Srl, Chialab Srl
+ * Copyright 2022 ChannelWeb Srl, Chialab Srl
  *
  * This file is part of BEdita: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -16,20 +18,16 @@ namespace BEdita\GraphQL\Model\Action;
 use BEdita\Core\Model\Action\BaseAction;
 use BEdita\GraphQL\Model\AppContext;
 use BEdita\GraphQL\Model\TypesRegistry;
-use BEdita\GraphQL\Model\Type\QueryType;
 use GraphQL\GraphQL;
-use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Schema;
 
 /**
  * Executes GraphQL query.
  *
- * @since 4.0.0
+ * @since 5.0.0
  */
 class QueryAction extends BaseAction
 {
-
     /**
      * GraphQL schema of current project
      *
@@ -38,7 +36,7 @@ class QueryAction extends BaseAction
     protected $schema;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function execute(array $data = [])
     {
@@ -65,10 +63,10 @@ class QueryAction extends BaseAction
      *
      * @return void
      */
-    protected function buildSchema()
+    protected function buildSchema(): void
     {
         $this->schema = new Schema([
-            'query' => TypesRegistry::query()
+            'query' => TypesRegistry::query(),
         ]);
     }
 }
