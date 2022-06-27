@@ -21,7 +21,7 @@ use BEdita\Core\Model\Action\ListEntitiesAction;
 use BEdita\Core\Model\Action\ListObjectsAction;
 use BEdita\GraphQL\Model\AppContext;
 use BEdita\GraphQL\Model\TypesRegistry;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 use GraphQL\Type\Definition\ObjectType;

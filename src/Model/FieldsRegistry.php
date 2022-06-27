@@ -132,10 +132,10 @@ class FieldsRegistry
     public static function resourceProperties($name)
     {
         $table = TableRegistry::getTableLocator()->get(Inflector::camelize($name));
-        $entity = $table->newEntity();
+        $entity = $table->newEmptyEntity();
 
         $properties = [];
-        $names = array_diff($table->getSchema()->columns(), $entity->hiddenProperties());
+        $names = array_diff($table->getSchema()->columns(), $entity->getHidden());
         foreach ($names as $name) {
             $properties[] = new StaticProperty(compact('name', 'table'));
         }

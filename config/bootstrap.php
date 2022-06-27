@@ -1,0 +1,2 @@
+<?php
+// Empty boostrap file
