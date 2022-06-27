@@ -31,7 +31,7 @@ class QueryAction extends BaseAction
     /**
      * GraphQL schema of current project
      *
-     * @var \GraphQL\Schema
+     * @var \GraphQL\Type\Schema
      */
     protected $schema;
 
