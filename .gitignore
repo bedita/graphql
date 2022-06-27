@@ -1,5 +1,7 @@
 # IDE and editor specific files #
 #################################
+.phpunit.result.cache
+tmp/
 /nbproject
 /tags
 .idea
