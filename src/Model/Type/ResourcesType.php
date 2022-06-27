@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -25,7 +27,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 class ResourcesType extends GraphQLObjectType
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function __construct($options)
     {
@@ -37,7 +39,7 @@ class ResourcesType extends GraphQLObjectType
             },
             'resolveField' => function ($value, $args, $context, ResolveInfo $info) {
                 return $value->{$info->fieldName};
-            }
+            },
         ];
         parent::__construct($config);
     }

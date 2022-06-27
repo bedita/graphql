@@ -9,13 +9,15 @@
         "issues": "https://github.com/bedita/graphql/issues"
     },
     "require": {
-        "bedita/core": "dev-4-cactus",
-        "bedita/api": "dev-4-cactus",
-        "webonyx/graphql-php": "~0.10"
+        "webonyx/graphql-php": "~14.11.5",
+        "bedita/api": "dev-5-salix",
+        "bedita/core": "dev-5-salix",
+        "cakephp/cakephp": "^4.3.9"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7|^6.0",
-        "cakephp/cakephp-codesniffer": "~3.0"
+        "phpunit/phpunit": "^9.5",
+        "cakephp/cakephp-codesniffer": "~4.5.1",
+        "phpstan/phpstan": "^1.7.1"
     },
     "autoload": {
         "psr-4": {
@@ -25,10 +27,21 @@
     "autoload-dev": {
         "psr-4": {
             "BEdita\\GraphQL\\Test\\": "tests",
-            "BEdita\\App\\": "tests/test_app/src",
             "BEdita\\Core\\Test\\": "./vendor/bedita/core/tests",
             "BEdita\\API\\Test\\": "./vendor/bedita/api/tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    },
+    "scripts": {
+        "cs-check": "vendor/bin/phpcs",
+        "cs-fix": "vendor/bin/phpcbf",
+        "stan": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/phpunit --colors=always"
+    },
+    "config": {
+        "allow-plugins": {
+            "cakephp/plugin-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }

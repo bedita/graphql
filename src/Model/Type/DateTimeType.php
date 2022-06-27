@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2018 ChannelWeb Srl, Chialab Srl
@@ -13,9 +15,9 @@
 
 namespace BEdita\GraphQL\Model\Type;
 
-use Cake\I18n\Time;
-use GraphQL\Error\Error;
+use Cake\I18n\FrozenTime;
 use GraphQL\Error\InvariantViolation;
+use GraphQL\Language\AST\Node;
 use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
@@ -43,11 +45,13 @@ class DateTimeType extends ScalarType
      */
     public function serialize($value)
     {
-        if ($value instanceof Time) {
+        if ($value instanceof FrozenTime) {
             return $value->jsonSerialize();
         }
         if (!is_string($value)) {
-            throw new InvariantViolation("DateTime can represent only strings or integer values: " . Utils::printSafe($value));
+            throw new InvariantViolation(
+                'DateTime can represent only strings or integer values: ' . Utils::printSafe($value)
+            );
         }
 
         return (string)$value;
@@ -55,6 +59,7 @@ class DateTimeType extends ScalarType
 
     /**
      * {@inheritDoc}
+     *
      * @codeCoverageIgnore
      */
     public function parseValue($value)
@@ -63,12 +68,12 @@ class DateTimeType extends ScalarType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function parseLiteral($ast)
+    public function parseLiteral(Node $valueNode, ?array $variables = null)
     {
-        if ($ast instanceof StringValueNode) {
-            return $ast->value;
+        if ($valueNode instanceof StringValueNode) {
+            return $valueNode->value;
         }
 
         return null;

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -15,7 +17,7 @@ namespace BEdita\GraphQL\Test\TestCase\Model\Type;
 
 use BEdita\GraphQL\Model\AppContext;
 use BEdita\GraphQL\Model\Type\QueryType;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\TestSuite\TestCase;
 use GraphQL\Type\Definition\ResolveInfo;
 
@@ -32,27 +34,27 @@ class QueryTypeTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.BEdita/Core.object_types',
-        'plugin.BEdita/Core.property_types',
-        'plugin.BEdita/Core.properties',
-        'plugin.BEdita/Core.relations',
-        'plugin.BEdita/Core.relation_types',
-        'plugin.BEdita/Core.objects',
-        'plugin.BEdita/Core.locations',
-        'plugin.BEdita/Core.media',
-        'plugin.BEdita/Core.streams',
-        'plugin.BEdita/Core.profiles',
-        'plugin.BEdita/Core.applications',
-        'plugin.BEdita/Core.roles',
-        'plugin.BEdita/Core.users',
+        'plugin.BEdita/Core.ObjectTypes',
+        'plugin.BEdita/Core.PropertyTypes',
+        'plugin.BEdita/Core.Properties',
+        'plugin.BEdita/Core.Relations',
+        'plugin.BEdita/Core.RelationTypes',
+        'plugin.BEdita/Core.Objects',
+        'plugin.BEdita/Core.Locations',
+        'plugin.BEdita/Core.Media',
+        'plugin.BEdita/Core.Streams',
+        'plugin.BEdita/Core.Profiles',
+        'plugin.BEdita/Core.Applications',
+        'plugin.BEdita/Core.Roles',
+        'plugin.BEdita/Core.Users',
     ];
 
     /**
      * Data provider for `testResolve`
      *
-     * @return void
+     * @return array
      */
-    public function resolveSingleProvider()
+    public function resolveSingleProvider(): array
     {
         return [
             'user' => [
@@ -80,14 +82,13 @@ class QueryTypeTest extends TestCase
      * @param array $args Input args
      * @param mixed $expected Expected result
      * @return void
-     *
      * @covers ::__construct()
      * @covers ::resolve()
      * @covers ::resolveResource()
      * @covers ::resolveObject()
      * @dataProvider resolveSingleProvider
      */
-    public function testResolveSingle($type, $args, $expected)
+    public function testResolveSingle($type, $args, $expected): void
     {
         if ($expected instanceof \Exception) {
             $this->expectException(get_class($expected));
@@ -110,9 +111,9 @@ class QueryTypeTest extends TestCase
     /**
      * Data provider for `testResolveList`
      *
-     * @return void
+     * @return array
      */
-    public function resolveListProvider()
+    public function resolveListProvider(): array
     {
         return [
             'users' => [
@@ -156,7 +157,6 @@ class QueryTypeTest extends TestCase
      * @param array $args Input args
      * @param mixed $expected Expected result
      * @return void
-     *
      * @covers ::__construct()
      * @covers ::resolve()
      * @covers ::resolveResourcesList()
@@ -164,7 +164,7 @@ class QueryTypeTest extends TestCase
      * @covers ::createFilter()
      * @dataProvider resolveListProvider
      */
-    public function testResolveList($type, $args, $expected)
+    public function testResolveList($type, $args, $expected): void
     {
         if ($expected instanceof \Exception) {
             $this->expectException(get_class($expected));
@@ -189,10 +189,9 @@ class QueryTypeTest extends TestCase
      * Trivial constructor test
      *
      * @return void
-     *
      * @covers ::__construct()
      */
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $queryType = new QueryType();
         $fields = $queryType->getFields();

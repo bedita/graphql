@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -35,10 +37,9 @@ class InputFilterTypeTest extends TestCase
      * Test input filter type creation
      *
      * @return void
-     *
      * @covers ::__construct()
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $inputFilter = new InputFilterType();
 

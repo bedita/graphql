@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * BEdita, API-first content management framework
- * Copyright 2017 ChannelWeb Srl, Chialab Srl
+ * Copyright 2022 Atlas Srl, Chialab Srl
  *
  * This file is part of BEdita: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published
@@ -13,14 +13,23 @@ declare(strict_types=1);
  * See LICENSE.LGPL or <http://gnu.org/licenses/lgpl-3.0.html> for more details.
  */
 
-namespace BEdita\GraphQL\Model;
+namespace BEdita\GraphQL;
+
+use Cake\Core\BasePlugin;
+use Cake\Core\PluginApplicationInterface;
 
 /**
- * Class AppContext
- * Instance available in all GraphQL resolvers as 3rd argument
- *
- * @package BEdita\GraphQL\Model
+ * Plugin for BEdita\GraphQL
  */
-class AppContext
+class Plugin extends BasePlugin
 {
+    /**
+     * {@inheritDoc}
+     *
+     * @codeCoverageIgnore
+     */
+    public function bootstrap(PluginApplicationInterface $app): void
+    {
+        parent::bootstrap($app);
+    }
 }

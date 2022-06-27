@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -29,25 +31,24 @@ class TypesRegistryTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.BEdita/Core.object_types',
-        'plugin.BEdita/Core.property_types',
-        'plugin.BEdita/Core.properties',
+        'plugin.BEdita/Core.ObjectTypes',
+        'plugin.BEdita/Core.PropertyTypes',
+        'plugin.BEdita/Core.Properties',
         'plugin.BEdita/Core.relations',
-        'plugin.BEdita/Core.relation_types',
-        'plugin.BEdita/Core.objects',
-        'plugin.BEdita/Core.locations',
-        'plugin.BEdita/Core.media',
-        'plugin.BEdita/Core.profiles',
+        'plugin.BEdita/Core.RelationTypes',
+        'plugin.BEdita/Core.Objects',
+        'plugin.BEdita/Core.Locations',
+        'plugin.BEdita/Core.Media',
+        'plugin.BEdita/Core.Profiles',
         'plugin.BEdita/Core.streams',
-        'plugin.BEdita/Core.roles',
-        'plugin.BEdita/Core.users',
+        'plugin.BEdita/Core.Roles',
+        'plugin.BEdita/Core.Users',
     ];
 
     /**
      * Test `rootTypes` method
      *
      * @return void
-     *
      * @covers ::rootTypes()
      * @covers ::objectTypeNames()
      * @covers ::objectType()
@@ -55,7 +56,7 @@ class TypesRegistryTest extends TestCase
      * @covers ::resourceType()
      * @covers ::clear()
      */
-    public function testRootTypes()
+    public function testRootTypes(): void
     {
         TypesRegistry::clear();
         $result = TypesRegistry::rootTypes();
@@ -102,7 +103,7 @@ class TypesRegistryTest extends TestCase
      *
      * @return array
      */
-    public function inspectProvider()
+    public function inspectProvider(): array
     {
         return [
             'user' => [
@@ -134,11 +135,10 @@ class TypesRegistryTest extends TestCase
      * @param string $name Type name
      * @param mixed $expected Inspection result
      * @return void
-     *
      * @dataProvider inspectProvider
      * @covers ::inspectTypeName()
      */
-    public function testInspectTypeName($name, $expected)
+    public function testInspectTypeName($name, $expected): void
     {
         $result = TypesRegistry::inspectTypeName($name);
         static::assertEquals($result, $expected);
@@ -147,9 +147,9 @@ class TypesRegistryTest extends TestCase
     /**
      * Data provider for `testPropertySchema`
      *
-     * @return void
+     * @return array
      */
-    public function propertySchemaProvider()
+    public function propertySchemaProvider(): array
     {
         return [
             'date' => [
@@ -167,7 +167,7 @@ class TypesRegistryTest extends TestCase
                         ],
                         [
                             'type' => 'integer',
-                        ]
+                        ],
                     ],
                 ],
                 TypesRegistry::int(),
@@ -180,7 +180,7 @@ class TypesRegistryTest extends TestCase
                         ],
                         [
                             'type' => 'null',
-                        ]
+                        ],
                     ],
                 ],
                 TypesRegistry::boolean(),
@@ -217,14 +217,13 @@ class TypesRegistryTest extends TestCase
      * Test `fromPropertySchema` method
      *
      * @return void
-     *
      * @param array $schema Property JSON schema
      * @param mixed $expected Expected property type
      * @covers ::fromPropertySchema()
      * @covers ::propertyFromTypeSchema()
      * @dataProvider propertySchemaProvider
      */
-    public function testPropertySchema(array $schema, $expected)
+    public function testPropertySchema(array $schema, $expected): void
     {
         $result = TypesRegistry::fromPropertySchema($schema);
         static::assertEquals($result, $expected);

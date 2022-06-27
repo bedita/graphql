@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -29,22 +31,22 @@ class ObjectsTypeTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.BEdita/Core.object_types',
-        'plugin.BEdita/Core.property_types',
-        'plugin.BEdita/Core.properties',
+        'plugin.BEdita/Core.ObjectTypes',
+        'plugin.BEdita/Core.PropertyTypes',
+        'plugin.BEdita/Core.Properties',
         'plugin.BEdita/Core.relations',
-        'plugin.BEdita/Core.relation_types',
-        'plugin.BEdita/Core.objects',
-        'plugin.BEdita/Core.profiles',
-        'plugin.BEdita/Core.users',
+        'plugin.BEdita/Core.RelationTypes',
+        'plugin.BEdita/Core.Objects',
+        'plugin.BEdita/Core.Profiles',
+        'plugin.BEdita/Core.Users',
     ];
 
     /**
      * Data provider for `testCreate`
      *
-     * @return void
+     * @return array
      */
-    public function typeProvider()
+    public function typeProvider(): array
     {
         return [
             'users' => [
@@ -62,11 +64,10 @@ class ObjectsTypeTest extends TestCase
      * Test simple object type creation
      *
      * @return void
-     *
      * @covers ::__construct()
      * @dataProvider typeProvider
      */
-    public function testCreate($name, $expected)
+    public function testCreate($name, $expected): void
     {
         $objectType = new ObjectsType(compact('name'));
 

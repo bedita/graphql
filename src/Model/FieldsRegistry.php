@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -14,7 +16,6 @@
 namespace BEdita\GraphQL\Model;
 
 use BEdita\Core\Model\Entity\StaticProperty;
-use BEdita\GraphQL\Model\TypesRegistry;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 
@@ -30,7 +31,7 @@ class FieldsRegistry
      *
      * @var string
      */
-    const CACHE_CONFIG = '_bedita_object_types_';
+    public const CACHE_CONFIG = '_bedita_object_types_';
 
     /**
      * Resource fields internal registry
@@ -113,9 +114,9 @@ class FieldsRegistry
      */
     public static function objectProperties($name)
     {
-        $objectType = TableRegistry::get('ObjectTypes')->get($name);
+        $objectType = TableRegistry::getTableLocator()->get('ObjectTypes')->get($name);
 
-        $properties = TableRegistry::get('Properties')->find('objectType', [$name])
+        $properties = TableRegistry::getTableLocator()->get('Properties')->find('objectType', [$name])
             ->cache(sprintf('id_%s_props', $objectType->get('id')), self::CACHE_CONFIG)
             ->toArray();
 
@@ -130,11 +131,11 @@ class FieldsRegistry
      */
     public static function resourceProperties($name)
     {
-        $table = TableRegistry::get(Inflector::camelize($name));
-        $entity = $table->newEntity();
+        $table = TableRegistry::getTableLocator()->get(Inflector::camelize($name));
+        $entity = $table->newEmptyEntity();
 
         $properties = [];
-        $names = array_diff($table->getSchema()->columns(), $entity->hiddenProperties());
+        $names = array_diff($table->getSchema()->columns(), $entity->getHidden());
         foreach ($names as $name) {
             $properties[] = new StaticProperty(compact('name', 'table'));
         }
@@ -169,15 +170,15 @@ class FieldsRegistry
         return [
             'field_name' => [
                 'type' => TypesRegistry::string(),
-                'description' => 'Name of the field to filter'
+                'description' => 'Name of the field to filter',
             ],
             'field_value' => [
                 'type' => TypesRegistry::string(),
-                'description' => 'Field value to look up'
+                'description' => 'Field value to look up',
             ],
             'query' => [
                 'type' => TypesRegistry::string(),
-                'description' => 'Search query to perform'
+                'description' => 'Search query to perform',
             ],
         ];
     }

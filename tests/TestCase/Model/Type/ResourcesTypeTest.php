@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -23,26 +25,25 @@ use Cake\TestSuite\TestCase;
  */
 class ResourcesTypeTest extends TestCase
 {
-
     /**
      * Fixtures
      *
      * @var array
      */
     public $fixtures = [
-        'plugin.BEdita/Core.property_types',
-        'plugin.BEdita/Core.object_types',
-        'plugin.BEdita/Core.properties',
-        'plugin.BEdita/Core.roles',
-        'plugin.BEdita/Core.applications',
+        'plugin.BEdita/Core.PropertyTypes',
+        'plugin.BEdita/Core.ObjectTypes',
+        'plugin.BEdita/Core.Properties',
+        'plugin.BEdita/Core.Roles',
+        'plugin.BEdita/Core.Applications',
     ];
 
     /**
      * Data provider for `testCreate`
      *
-     * @return void
+     * @return array
      */
-    public function typeProvider()
+    public function typeProvider(): array
     {
         return [
            'roles' => [
@@ -60,11 +61,10 @@ class ResourcesTypeTest extends TestCase
      * Test simple resource type creation
      *
      * @return void
-     *
      * @covers ::__construct()
      * @dataProvider typeProvider
      */
-    public function testCreate($name, $expected)
+    public function testCreate($name, $expected): void
     {
         $resourceType = new ResourcesType(compact('name'));
 

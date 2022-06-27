@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -20,10 +22,8 @@ use BEdita\GraphQL\Model\Type\QueryType;
 use BEdita\GraphQL\Model\Type\ResourcesType;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
-use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Definition\Type;
 
 /**
@@ -38,28 +38,28 @@ class TypesRegistry
      *
      * @var int
      */
-    const SINGLE_RESOURCE = 1;
+    public const SINGLE_RESOURCE = 1;
 
     /**
      * Used to identify a list of resources.
      *
      * @var int
      */
-    const RESOURCES_LIST = 2;
+    public const RESOURCES_LIST = 2;
 
     /**
      * Used to identify a singular object.
      *
      * @var int
      */
-    const SINGLE_OBJECT = 3;
+    public const SINGLE_OBJECT = 3;
 
     /**
      * Used to identify an objects list.
      *
      * @var int
      */
-    const OBJECTS_LIST = 4;
+    public const OBJECTS_LIST = 4;
 
     /**
      * Resource types internal registry
@@ -78,7 +78,7 @@ class TypesRegistry
     /**
      * DateTime type
      *
-     * @var BEdita\GraphQL\Model\Type\DateTimeType
+     * @var \BEdita\GraphQL\Model\BEdita\GraphQL\Model\Type\DateTimeType
      */
     private static $dateTime;
 
@@ -141,7 +141,7 @@ class TypesRegistry
                 'type' => static::resourceType($name),
                 'description' => sprintf('Get "%s" item by id', $singular),
                 'args' => [
-                    'id' => static::nonNull(static::id())
+                    'id' => static::nonNull(static::id()),
                 ],
             ];
             $types[$name] = [
@@ -161,7 +161,7 @@ class TypesRegistry
                 'type' => static::objectType($name),
                 'description' => sprintf('Get "%s" item by id', $singular),
                 'args' => [
-                    'id' => static::nonNull(static::id())
+                    'id' => static::nonNull(static::id()),
                 ],
             ];
             $types[$name] = [
@@ -183,7 +183,6 @@ class TypesRegistry
      * Format: '{plural_name}' => '{singular_name}'
      *
      * @return array
-     *
      * @codeCoverageIgnore
      */
     public static function resourceTypeNames()
@@ -200,7 +199,9 @@ class TypesRegistry
     public static function objectTypeNames()
     {
         if (empty(self::$objectTypeNames)) {
-            $objectTypes = TableRegistry::get('ObjectTypes')->find('all', ['fields' => ['name', 'singular']])->toArray();
+            $objectTypes = TableRegistry::getTableLocator()->get('ObjectTypes')
+                ->find('all', ['fields' => ['name', 'singular']])
+                ->toArray();
             foreach ($objectTypes as $data) {
                 self::$objectTypeNames[$data['name']] = $data['singular'];
             }
@@ -339,8 +340,8 @@ class TypesRegistry
     }
 
     /**
-     * @param Type $type Type name
-     * @return ListOfType
+     * @param \GraphQL\Type\Definition\Type $type Type name
+     * @return \GraphQL\Type\Definition\ListOfType
      * @codeCoverageIgnore
      */
     public static function listOf($type)
@@ -349,8 +350,8 @@ class TypesRegistry
     }
 
     /**
-     * @param Type $type Type name
-     * @return NonNull
+     * @param \GraphQL\Type\Definition\Type $type Type name
+     * @return \GraphQL\Type\Definition\NonNull
      * @codeCoverageIgnore
      */
     public static function nonNull($type)
@@ -363,7 +364,7 @@ class TypesRegistry
      * Defaults to Type::string() if no match is found.
      *
      * @param array $schema Property JSON schema
-     * @return NonNull|ScalarType|EnumType
+     * @return \GraphQL\Type\Definition\NonNull|\BEdita\GraphQL\Model\ScalarType|\BEdita\GraphQL\Model\EnumType
      */
     public static function fromPropertySchema(array $schema)
     {
@@ -389,7 +390,7 @@ class TypesRegistry
      * Defaults to Type::string() if no match is found.
      *
      * @param array $schema Property JSON schema, 'type' key MUST be present
-     * @return NonNull|ScalarType|EnumType
+     * @return \GraphQL\Type\Definition\NonNull|\BEdita\GraphQL\Model\ScalarType|\BEdita\GraphQL\Model\EnumType
      */
     protected static function propertyFromTypeSchema(array $schema)
     {

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -20,12 +22,12 @@ use BEdita\API\TestSuite\IntegrationTestCase;
 class GraphQLControllerTest extends IntegrationTestCase
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public $fixtures = [
-        'plugin.BEdita/Core.locations',
-        'plugin.BEdita/Core.streams',
-        'plugin.BEdita/Core.media',
+        'plugin.BEdita/Core.Locations',
+        'plugin.BEdita/Core.Streams',
+        'plugin.BEdita/Core.Media',
     ];
 
     /**
@@ -33,7 +35,7 @@ class GraphQLControllerTest extends IntegrationTestCase
      *
      * @return array
      */
-    public function contentTypeProvider()
+    public function contentTypeProvider(): array
     {
         return [
             'application json' => [
@@ -51,13 +53,13 @@ class GraphQLControllerTest extends IntegrationTestCase
             'no type' => [
                 '',
                 'POST',
-                '{"query": "{ user(id: \"1\") { username }}"}'
+                '{"query": "{ user(id: \"1\") { username }}"}',
             ],
             'simple get' => [
                 '',
                 'GET',
                 '',
-                'query={user(id:"1"){username}}'
+                'query={user(id:"1"){username}}',
             ],
         ];
     }
@@ -66,27 +68,26 @@ class GraphQLControllerTest extends IntegrationTestCase
      * Test content type method.
      *
      * @return void
-     *
      * @covers ::execute()
      * @covers ::initialize()
      * @covers ::readInput()
      * @dataProvider contentTypeProvider()
      */
-    public function testContentType($contentType, $method, $body, $queryString = '')
+    public function testContentType($contentType, $method, $body, $queryString = ''): void
     {
         $expected = [
             'data' => [
                 'user' => [
                     'username' => 'first user',
-                ]
-            ]
+                ],
+            ],
         ];
 
         if ($method === 'GET') {
             $this->configRequestHeaders();
             $this->get('/graphql?' . $queryString);
         } else {
-            $this->configRequestHeaders('POST', ['Content-Type' => $contentType]);
+            $this->configRequestHeaders('POST', array_filter(['Content-Type' => $contentType]));
             $this->post('/graphql', $body);
         }
         $result = json_decode((string)$this->_response->getBody(), true);
@@ -102,17 +103,17 @@ class GraphQLControllerTest extends IntegrationTestCase
      *
      * @return array
      */
-    public function failureProvider()
+    public function failureProvider(): array
     {
         return [
             'empty' => [
                  '{"query": "{}"}',
-                 400
+                 400,
             ],
             'wrong' => [
                 '{"query": "{gustavo}"}',
-                400
-            ]
+                400,
+            ],
         ];
     }
 
@@ -120,13 +121,12 @@ class GraphQLControllerTest extends IntegrationTestCase
      * Test failure method.
      *
      * @return void
-     *
      * @covers ::execute()
      * @covers ::initialize()
      * @covers ::readInput()
      * @dataProvider failureProvider()
      */
-    public function testFailure($query, $status, $message = '')
+    public function testFailure($query, $status, $message = ''): void
     {
         $this->configRequestHeaders('POST', ['Content-Type' => 'application/json']);
         $this->post('/graphql', $query);

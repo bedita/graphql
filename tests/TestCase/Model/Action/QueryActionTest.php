@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * BEdita, API-first content management framework
  * Copyright 2017 ChannelWeb Srl, Chialab Srl
@@ -14,7 +16,6 @@
 namespace BEdita\GraphQL\Test\TestCase\Model\Action;
 
 use BEdita\GraphQL\Model\Action\QueryAction;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -30,18 +31,18 @@ class QueryActionTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.BEdita/Core.object_types',
-        'plugin.BEdita/Core.property_types',
-        'plugin.BEdita/Core.properties',
+        'plugin.BEdita/Core.ObjectTypes',
+        'plugin.BEdita/Core.PropertyTypes',
+        'plugin.BEdita/Core.Properties',
         'plugin.BEdita/Core.relations',
-        'plugin.BEdita/Core.relation_types',
-        'plugin.BEdita/Core.objects',
-        'plugin.BEdita/Core.locations',
-        'plugin.BEdita/Core.media',
-        'plugin.BEdita/Core.profiles',
-        'plugin.BEdita/Core.roles',
+        'plugin.BEdita/Core.RelationTypes',
+        'plugin.BEdita/Core.Objects',
+        'plugin.BEdita/Core.Locations',
+        'plugin.BEdita/Core.Media',
+        'plugin.BEdita/Core.Profiles',
+        'plugin.BEdita/Core.Roles',
         'plugin.BEdita/Core.streams',
-        'plugin.BEdita/Core.users',
+        'plugin.BEdita/Core.Users',
     ];
 
     /**
@@ -49,7 +50,7 @@ class QueryActionTest extends TestCase
      *
      * @return void
      */
-    public function executeProvider()
+    public function executeProvider(): array
     {
         return [
             'user' => [
@@ -78,7 +79,7 @@ class QueryActionTest extends TestCase
                         'users' => [
                             [
                                 'username' => 'second user',
-                            ]
+                            ],
                         ],
                     ],
                 ],
@@ -90,7 +91,7 @@ class QueryActionTest extends TestCase
                         'streams' => [
                             [
                                 'mime_type' => 'image/png',
-                            ]
+                            ],
                         ],
                     ],
                 ],
@@ -103,16 +104,14 @@ class QueryActionTest extends TestCase
      * Test simple query execution.
      *
      * @return void
-     *
      * @covers ::execute()
      * @covers ::buildSchema()
      * @covers \BEdita\GraphQL\Model\Type\ObjectsType::__construct()
      * @covers \BEdita\GraphQL\Model\Type\QueryType::__construct()
      * @covers \BEdita\GraphQL\Model\Type\ResourcesType::__construct()
-     *
      * @dataProvider executeProvider
      */
-    public function testExecute($expected, $query)
+    public function testExecute($expected, $query): void
     {
         $action = new QueryAction();
         $result = $action(compact('query'));
