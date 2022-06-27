@@ -87,7 +87,7 @@ class GraphQLControllerTest extends IntegrationTestCase
             $this->configRequestHeaders();
             $this->get('/graphql?' . $queryString);
         } else {
-            $this->configRequestHeaders('POST', ['Content-Type' => $contentType]);
+            $this->configRequestHeaders('POST', array_filter(['Content-Type' => $contentType]));
             $this->post('/graphql', $body);
         }
         $result = json_decode((string)$this->_response->getBody(), true);

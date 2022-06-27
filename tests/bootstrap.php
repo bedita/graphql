@@ -96,7 +96,7 @@ Configure::write('Error', [
     'skipLog' => [],
     'log' => true,
     'trace' => true,
-    'ignoredDeprecationPaths' => [],
+    'ignoredDeprecationPaths' => ['cakephp/cakephp/src/TestSuite/Fixture/FixtureInjector.php'],
 ]);
 
 Configure::write('Plugins', []);
