@@ -10,14 +10,14 @@
     },
     "require": {
         "webonyx/graphql-php": "~14.11.5",
-        "cakephp/cakephp": "~4.3.0",
-        "bedita/api": "dev-experiment/cakephp4",
-        "bedita/core": "dev-experiment/cakephp4"
+        "bedita/api": "dev-5-salix",
+        "bedita/core": "dev-5-salix",
+        "cakephp/cakephp": "^4.3.9"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0",
+        "phpunit/phpunit": "^9.5",
         "cakephp/cakephp-codesniffer": "~4.5.1",
-        "phpstan/phpstan": "^1.5"
+        "phpstan/phpstan": "^1.7.1"
     },
     "autoload": {
         "psr-4": {
@@ -35,7 +35,7 @@
     "scripts": {
         "cs-check": "vendor/bin/phpcs",
         "cs-fix": "vendor/bin/phpcbf",
-        "analyse": "vendor/bin/phpstan analyse",
+        "stan": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/phpunit --colors=always"
     },
     "config": {
