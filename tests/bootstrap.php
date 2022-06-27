@@ -13,19 +13,20 @@ declare(strict_types=1);
  * See LICENSE.LGPL or <http://gnu.org/licenses/lgpl-3.0.html> for more details.
  */
 
-use BEdita\Core\Filesystem\FilesystemRegistry;
+use BEdita\API\Error\ExceptionRenderer;
 use BEdita\GraphQL\Test\TestApp\Application;
 use Cake\Cache\Cache;
 use Cake\Cache\Engine\ArrayEngine;
-use Cake\Cache\Engine\NullEngine;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
+use Cake\Error\ConsoleErrorHandler;
+use Cake\I18n\FrozenDate;
+use Cake\I18n\FrozenTime;
 use Cake\Log\Engine\ConsoleLog;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
-use League\Flysystem\Adapter\NullAdapter;
 
 $findRoot = function ($root) {
     do {
@@ -41,24 +42,30 @@ $root = $findRoot(__FILE__);
 unset($findRoot);
 chdir($root);
 
-require_once 'vendor/cakephp/cakephp/src/basics.php';
+$_SERVER['PHP_SELF'] = '/';
+
 require_once 'vendor/autoload.php';
 
 define('ROOT', $root . DS . 'tests' . DS);
 define('APP', ROOT . 'TestApp' . DS);
 define('TMP', sys_get_temp_dir() . DS);
 define('LOGS', ROOT . DS . 'logs' . DS);
-define('CONFIG', ROOT . DS . 'config' . DS);
+define('CONFIG', APP . DS . 'config' . DS);
 define('CACHE', TMP . 'cache' . DS);
 define('CORE_PATH', $root . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
+define('CAKE', CORE_PATH . 'src' . DS);
+define('RESOURCES', ROOT . DS . 'resources' . DS);
+define('WWW_ROOT', ROOT . DS . 'webroot' . DS);
 
 Configure::write('debug', true);
 Configure::write('App', [
-    'namespace' => 'BEdita\Placeholders\Test\TestApp',
+    'namespace' => 'BEdita\GraphQL\Test\TestApp',
     'encoding' => 'UTF-8',
+    'defaultLocale' => 'en_US',
     'paths' => [
-        'plugins' => [ROOT . 'Plugin' . DS],
-        'templates' => [APP . 'Template' . DS],
+        'plugins' => [ROOT . DS . 'plugins' . DS],
+        'templates' => [ROOT . DS . 'templates' . DS],
+        'locales' => [RESOURCES . 'locales' . DS],
     ],
 ]);
 
@@ -78,33 +85,71 @@ Cache::drop('_bedita_core_');
 Cache::setConfig([
     '_cake_core_' => ['engine' => ArrayEngine::class],
     '_cake_model_' => ['engine' => ArrayEngine::class],
-    '_bedita_object_types_' => ['className' => NullEngine::class],
-    '_bedita_core_' => ['className' => NullEngine::class],
+    '_cake_routes_' => ['engine' => ArrayEngine::class],
+    '_bedita_object_types_' => ['engine' => ArrayEngine::class],
+    '_bedita_core_' => ['engine' => ArrayEngine::class],
 ]);
 
-if (!getenv('db_dsn')) {
-    putenv('db_dsn=sqlite:///:memory:');
-}
-ConnectionManager::setConfig('test', [
-    'url' => getenv('db_dsn'),
-    // 'log' => true,
+Configure::write('Error', [
+    'errorLevel' => E_ALL,
+    'exceptionRenderer' => ExceptionRenderer::class,
+    'skipLog' => [],
+    'log' => true,
+    'trace' => true,
+    'ignoredDeprecationPaths' => [],
 ]);
+
+Configure::write('Plugins', []);
+Configure::write('Datasources', [
+    'default' => [
+        'url' => env('DATABASE_URL', 'sqlite:///tmp/bedita5.sqlite'),
+    ],
+    'test' => [
+        'url' => env('DATABASE_TEST_URL', 'sqlite:///tmp/bedita5_test.sqlite'),
+    ],
+]);
+
+ConnectionManager::setConfig(Configure::consume('Datasources') ?: []);
+if (getenv('db_dsn')) {
+    ConnectionManager::drop('test');
+    ConnectionManager::setConfig('test', ['url' => getenv('db_dsn')]);
+}
 ConnectionManager::alias('test', 'default');
 
-Router::reload();
-Security::setSalt('BEDITA');
-
-FilesystemRegistry::setConfig([
-    'default' => ['className' => NullAdapter::class],
-    'thumbnails' => ['className' => NullAdapter::class],
-]);
-
-$app = new Application(dirname(__DIR__) . '/config');
+$app = new Application(APP . '/config');
 $app->bootstrap();
 $app->pluginBootstrap();
+
+Router::reload();
+Security::setSalt('BEDITA_SUPER_SECURE_RANDOM_STRING');
 
 // clear all before running tests
 TableRegistry::getTableLocator()->clear();
 Cache::clear('_cake_core_');
 Cache::clear('_cake_model_');
+Cache::clear('_cake_routes_');
 Cache::clear('_bedita_object_types_');
+Cache::clear('_bedita_core_');
+
+if (!defined('API_KEY')) {
+    define('API_KEY', 'API_KEY');
+}
+
+if (getenv('DEBUG_LOG_QUERIES')) {
+    ConnectionManager::get('test')->logQueries(true);
+    Log::setConfig('queries', [
+        'className' => 'Console',
+        'stream' => 'php://stdout',
+        'scopes' => ['queriesLog'],
+    ]);
+}
+
+$now = FrozenTime::parse('2018-01-01T00:00:00Z');
+FrozenTime::setTestNow($now);
+FrozenDate::setTestNow($now);
+
+date_default_timezone_set(env('BEDITA_DEFAULT_TIMEZONE', 'UTC'));
+mb_internal_encoding(Configure::read('App.encoding'));
+ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
+
+(new ConsoleErrorHandler(Configure::read('Error')))->register();

@@ -17,7 +17,7 @@ namespace BEdita\GraphQL\Test\TestCase\Model\Type;
 
 use BEdita\GraphQL\Model\AppContext;
 use BEdita\GraphQL\Model\Type\QueryType;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\TestSuite\TestCase;
 use GraphQL\Type\Definition\ResolveInfo;
 
@@ -34,19 +34,19 @@ class QueryTypeTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.BEdita/Core.object_types',
-        'plugin.BEdita/Core.property_types',
-        'plugin.BEdita/Core.properties',
+        'plugin.BEdita/Core.ObjectTypes',
+        'plugin.BEdita/Core.PropertyTypes',
+        'plugin.BEdita/Core.Properties',
         'plugin.BEdita/Core.relations',
-        'plugin.BEdita/Core.relation_types',
-        'plugin.BEdita/Core.objects',
-        'plugin.BEdita/Core.locations',
-        'plugin.BEdita/Core.media',
+        'plugin.BEdita/Core.RelationTypes',
+        'plugin.BEdita/Core.Objects',
+        'plugin.BEdita/Core.Locations',
+        'plugin.BEdita/Core.Media',
         'plugin.BEdita/Core.streams',
-        'plugin.BEdita/Core.profiles',
-        'plugin.BEdita/Core.applications',
-        'plugin.BEdita/Core.roles',
-        'plugin.BEdita/Core.users',
+        'plugin.BEdita/Core.Profiles',
+        'plugin.BEdita/Core.Applications',
+        'plugin.BEdita/Core.Roles',
+        'plugin.BEdita/Core.Users',
     ];
 
     /**

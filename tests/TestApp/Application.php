@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace BEdita\GraphQL\Test\TestApp;
 
-use Cake\Http\BaseApplication;
-use Cake\Http\MiddlewareQueue;
-use Cake\Routing\Middleware\RoutingMiddleware;
+use BEdita\API\App\BaseApplication;
 
 /**
  * Application setup class.
@@ -20,17 +18,12 @@ class Application extends BaseApplication
      */
     public function bootstrap(): void
     {
-        $this->addPlugin('BEdita/Core', ['path' => dirname(dirname(__DIR__)) . DS . 'vendor/bedita/core']);
-        $this->addPlugin('BEdita/API', ['path' => dirname(dirname(__DIR__)) . DS . 'vendor/bedita/api']);
+        // Call parent to load bootstrap from files.
+        parent::bootstrap();
+
+        $this->addPlugin('BEdita/Core', ['path' => dirname(dirname(__DIR__)) . DS . 'vendor/bedita/core/']);
+        $this->addPlugin('BEdita/API', ['path' => dirname(dirname(__DIR__)) . DS . 'vendor/bedita/api/']);
         // Load GraphQL plugin
         $this->addPlugin('BEdita/GraphQL', ['path' => dirname(dirname(__DIR__)) . DS]);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
-    {
-        return $middlewareQueue->add(new RoutingMiddleware($this));
     }
 }

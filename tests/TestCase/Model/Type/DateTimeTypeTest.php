@@ -98,7 +98,7 @@ class DateTimeTypeTest extends TestCase
         $result = $this->dateTimeType->parseLiteral($ast);
         static::assertEquals($result, $date);
 
-        $result = $this->dateTimeType->parseLiteral($date);
+        $result = $this->dateTimeType->parseLiteral(new StringValueNode([]));
         static::assertNull($result);
     }
 }
